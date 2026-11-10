@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Update Student</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f6f9;
+            margin: 0;
+            padding: 30px;
+        }
+
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background: white;
+            padding: 25px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #263b5e;
+        }
+
+        input, button {
+            width: 100%;
+            padding: 12px;
+            margin: 10px 0;
+            box-sizing: border-box;
+        }
+
+        button {
+            background: #263b5e;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+
+        a {
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+            color: #263b5e;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>Update Student</h1>
+
+    <form th:action="@{/students/update/{id}(id=${student.id})}" method="post">
+
+        <input type="text" name="name"
+               th:value="${student.name}" placeholder="Student Name" required>
+
+        <input type="email" name="email"
+               th:value="${student.email}" placeholder="Student Email" required>
+
+        <input type="text" name="course"
+               th:value="${student.course}" placeholder="Course" required>
+
+        <button type="submit">Update Student</button>
+
+    </form>
+
+    <a th:href="@{/}">Back to Student Records</a>
+
+</div>
+
+</body>
+</html>
