@@ -7,34 +7,16 @@ services:
     plan: free
     region: oregon
     branch: main
-    port: 8081
     envVars:
       - key: SPRING_PROFILES_ACTIVE
         value: docker
-      - key: MYSQL_ROOT_PASSWORD
-        fromDatabase:
-          name: student-management-db
-          property: password
       - key: DB_HOST
-        fromDatabase:
-          name: student-management-db
-          property: host
+        value: localhost
       - key: DB_PORT
-        fromDatabase:
-          name: student-management-db
-          property: port
+        value: "3306"
       - key: DB_NAME
-        fromDatabase:
-          name: student-management-db
-          property: database
+        value: student_management
       - key: DB_USER
-        fromDatabase:
-          name: student-management-db
-          property: user
-
-databases:
-  - name: student-management-db
-    databaseName: student_management
-    user: root
-    plan: free
-    region: oregon
+        value: root
+      - key: MYSQL_ROOT_PASSWORD
+        value: anits
