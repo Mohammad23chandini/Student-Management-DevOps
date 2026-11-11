@@ -1,75 +1,116 @@
 # 🎓 Student Management Pro — DevOps & Modern Dashboard
 
-[![Java](https://img.shields.io/badge/Java-21-orange.svg?logo=openjdk&logoColor=white)](https://openjdk.org/)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.2-brightgreen.svg?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
-[![MySQL](https://img.shields.io/badge/MySQL-8.4-blue.svg?logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED.svg?logo=docker&logoColor=white)](https://www.docker.com/)
-[![Docker Compose](https://img.shields.io/badge/Docker%20Compose-Orchestrated-blue?logo=docker&logoColor=white)](https://docs.docker.com/compose/)
-[![Jenkins](https://img.shields.io/badge/Jenkins-CI%2FCD-D24939.svg?logo=jenkins&logoColor=white)](https://www.jenkins.io/)
-[![UI Design](https://img.shields.io/badge/UI%2FUX-macOS%20Inspired-000000.svg?logo=apple&logoColor=white)](https://developer.apple.com/design/human-interface-guidelines/)
-
-A commercial-grade **Student Information System (SIS) & Management Dashboard** built with **Java 21**, **Spring Boot**, **MySQL 8.4**, and **DevOps automation** (Docker, Docker Compose, and Jenkins CI). 
-
-The user interface follows the **Apple Human Interface Guidelines (macOS Sequoia / Sonoma)**, combining elegant glassmorphism, SF Pro typography, refined animations, and an authentic desktop experience with robust backend persistence, academic tracking, and financial tuition fee management.
+[![Live Demo on Render](https://img.shields.io/badge/Render-Live%20Demo-46E3B7.svg?style=for-the-badge&logo=render&logoColor=white)](https://student-management-devops-kxfv.onrender.com/)
+[![Java](https://img.shields.io/badge/Java-21-orange.svg?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.2-brightgreen.svg?style=for-the-badge&logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
+[![MySQL](https://img.shields.io/badge/MySQL-8.4-blue.svg?style=for-the-badge&logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED.svg?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![Kubernetes](https://img.shields.io/badge/Kubernetes-Orchestrated-326CE5.svg?style=for-the-badge&logo=kubernetes&logoColor=white)](https://kubernetes.io/)
+[![Jenkins](https://img.shields.io/badge/Jenkins-CI%2FCD-D24939.svg?style=for-the-badge&logo=jenkins&logoColor=white)](https://www.jenkins.io/)
+[![UI Design](https://img.shields.io/badge/UI%2FUX-macOS%20Inspired-000000.svg?style=for-the-badge&logo=apple&logoColor=white)](https://developer.apple.com/design/human-interface-guidelines/)
 
 ---
 
-## 🌟 Key Highlights & Features
+## 🌐 Live Production Cloud Deployment
 
-### 🖥️ 1. macOS-Inspired Interface Design
-- **macOS Window Frame & Traffic Lights**: Working red (close), amber (minimize), and green (zoom/fullscreen) window controls.
-- **Translucent Frosted Glass Surfaces**: Backdrop blur effects (`backdrop-filter: blur(25px)`), subtle drop shadows, and clean borders.
-- **System Typography & Apple Color Palette**: SF Pro font stack with Apple Blue (`#0071e3`), Emerald Green (`#34c759`), and Accent Purple (`#af52de`).
-- **Dark / Light Mode**: Seamless theme switcher with live icon changes and `localStorage` state persistence.
-- **Collapsible Sidebar**: Compact icon-only view or expanded full navigation menu with live database connection telemetry.
+The live, fully functional cloud application is deployed on **Render**:
 
-### 📚 2. Academic Performance Tracking (10.0 CGPA Scale)
-- **Roll Number / Student ID**: Official institutional roll number (e.g., `23CSE045`, `23CSE015`).
-- **Semester & Year Level**: Track student academic progression from `Semester 1` through `Semester 8`.
-- **Cumulative CGPA & Academic Standing**: Live 10.0 CGPA scale tracking (0.00 – 10.00) with automatic Indian university honor classifications:
-  - `🌟 Distinction` — CGPA >= 9.00
+👉 **[https://student-management-devops-kxfv.onrender.com/](https://student-management-devops-kxfv.onrender.com/)**
+
+> [!NOTE]
+> * **Zero-Configuration Cloud Architecture**: The live deployment features an intelligent self-probing DataSource mechanism. It automatically connects to MySQL when a dedicated cluster database is present and gracefully falls back to an embedded MySQL-compatible in-memory database for cloud demo instances without downtime.
+> * **Live Sample Data**: Pre-seeded with a comprehensive student cohort featuring 10.0 CGPAs, attendance metrics, and INR fee ledgers.
+
+---
+
+## 📖 Overview
+
+**Student Management Pro** is a commercial-grade **Student Information System (SIS) & Analytics Dashboard** engineered using **Java 21**, **Spring Boot 4.1.2**, and **MySQL 8.4**, wrapped in a complete **DevOps lifecycle** featuring **Docker**, **Kubernetes (K8s)**, **Jenkins CI/CD automation**, **GitHub Actions**, and cloud deployment on **Render**.
+
+The user interface is crafted strictly in accordance with **Apple Human Interface Guidelines (macOS Sequoia / Sonoma)**, combining translucent frosted glassmorphism, authentic traffic-light window controls, SF Pro typography, refined micro-interactions, dark/light theme switching, and real-time academic (10.0 CGPA scale) and financial tuition fee tracking in Indian Rupees (`₹` INR).
+
+---
+
+## 🛠️ Complete Technology Stack & DevOps Toolchain
+
+### 1. Backend Engineering & Frameworks
+* **Java 21 (LTS)**: Utilizing modern Java features, pattern matching, records, and virtual threads readiness.
+* **Spring Boot 4.1.2**: Enterprise application framework providing auto-configuration and production monitoring.
+* **Spring Data JPA & Hibernate ORM 7.x**: Object-relational mapping, transactional data management, and dynamic schema synchronization (`ddl-auto=update`).
+* **HikariCP**: Ultra-fast, lightweight JDBC connection pooling for reliable high-throughput database transactions.
+* **Apache Tomcat 11**: High-performance embedded servlet container supporting dynamic port binding (`$PORT`).
+
+### 2. Databases & Persistence
+* **MySQL 8.4 Community Edition**: Enterprise-grade relational database running in dedicated containerized and Kubernetes environments.
+* **H2 Database Engine**: In-memory database with MySQL compatibility mode (`MODE=MySQL;DATABASE_TO_LOWER=TRUE`) for instant, zero-configuration cloud previews.
+* **Dynamic DataSource Reachability Prober**: Custom Spring configuration that automatically verifies MySQL reachability on startup and gracefully activates the embedded database when running on standalone cloud web containers.
+
+### 3. Frontend & Apple macOS UI/UX
+* **Thymeleaf 3.x**: Modern server-side Java template engine rendering data-driven views and modals.
+* **macOS Sequoia / Sonoma Design System**:
+  - Translucent frosted glass effect with `backdrop-filter: blur(25px)`.
+  - Functional macOS traffic lights (Red = Close/Reset, Amber = Minimize view, Green = Fullscreen toggle).
+  - Apple SF Pro font stack with Apple accent palettes (Blue `#0071e3`, Emerald `#34c759`, Purple `#af52de`).
+* **HTML5 & Modern CSS3**: Custom CSS tokens, fluid responsive grid layouts, and seamless Dark/Light mode with `localStorage` memory.
+* **Vanilla JavaScript (ES6+)**: Pure client-side filtering, live search, asynchronous modal interactions, and instant balance calculations.
+* **Chart.js**: Interactive donut charts for department distribution and fee realization rates with automatic pure SVG fallbacks.
+
+### 4. Containerization & Orchestration (DevOps)
+* **Docker**: Multi-stage `Dockerfile` leveraging `maven:3.9-eclipse-temurin-21` for compilation and lightweight `eclipse-temurin:21-jre` for production runtime images.
+* **Docker Compose**: Multi-container orchestration linking the application container with MySQL 8.4, including automated volume management (`mysql_data`) and container healthcheck probes (`mysqladmin ping`).
+* **Kubernetes (K8s)**:
+  - **Namespaces (`00-namespace.yaml`)**: Isolated `student-management` namespace.
+  - **Secrets (`01-mysql-secret.yaml`)**: Base64 encrypted credentials for root MySQL access.
+  - **ConfigMaps (`02-app-configmap.yaml`)**: Decoupled environment configurations (`DB_HOST`, `DB_PORT`, `SPRING_PROFILES_ACTIVE`).
+  - **PersistentVolumeClaim (`03-mysql-pvc.yaml`)**: 2Gi volume retention ensuring database resilience across pod restarts.
+  - **MySQL Deployment & Service (`04-*.yaml`, `05-*.yaml`)**: MySQL 8.4 pod with internal DNS `mysql-service:3306`.
+  - **Application Deployment & Service (`06-*.yaml`, `07-*.yaml`)**: Multi-replica Spring Boot deployment (2 replicas) with rolling updates, liveness/readiness probes, and NodePort (`30081`) / LoadBalancer (`8081`) services.
+  - **Kustomize**: Declarative Kubernetes resource management.
+
+### 5. Continuous Integration & Continuous Delivery (CI/CD)
+* **Jenkins Pipeline (`Jenkinsfile`)**: Declarative 5-stage automated pipeline:
+  1. **Stage 1 (Checkout SCM)**: Clones the latest commit from GitHub `main`.
+  2. **Stage 2 (Maven Package)**: Compiles and packages `app.jar` skipping test suites for rapid delivery.
+  3. **Stage 3 (Docker Containerization)**: Builds multi-stage Docker container images tagged with build numbers and `latest`.
+  4. **Stage 4 (Kubernetes Rollout)**: Automatically applies Kubernetes manifests (`kubectl apply -f k8s/`) and waits for zero-downtime rolling update completion.
+  5. **Stage 5 (Smoke & Healthcheck)**: Automated HTTP probing of `/api/stats` to verify operational status.
+* **GitHub Actions (`.github/workflows/ci.yml`)**: Cloud-native CI pipeline executing on every push and pull request.
+
+### 6. Cloud Hosting & Deployment
+* **Render.com**: Automated Docker Web Service hosting the live application container with SSL encryption, continuous deployment on Git push, and automatic health monitoring.
+* **Vercel**: Edge preview configuration (`vercel.json`) and static dashboard showcase (`public/`).
+
+---
+
+## 🌟 Key Functional Highlights
+
+### 📚 1. Academic Performance Tracking (10.0 CGPA Scale)
+- **Institutional Roll Numbers**: Official identifier tracking (e.g., `23CSE045`, `23CSE015`).
+- **Academic Semesters**: Full tracking from `Semester 1` through `Semester 8`.
+- **10.0 CGPA Scale & Classifications**:
+  - `🌟 Distinction` — CGPA $\ge$ 9.00
   - `🟢 First Class` — CGPA 7.50 – 8.99
   - `🟡 Second Class` — CGPA 6.00 – 7.49
   - `🔴 Academic Warning` — CGPA < 6.00
-- **Attendance Monitoring**: Percentage tracker with color-coded alerts (`🟢 >= 85%`, `🟠 75%–84%`, `🔴 < 75% Low Attendance`).
+- **Attendance Monitoring**: Dynamic percentage tracker with visual status alerts (`🟢 >= 85%`, `🟠 75%–84%`, `🔴 < 75% Low Attendance`).
 
-### 💳 3. Tuition & Fee Management (Indian Rupees ₹)
-- **Tuition Ledger in ₹ INR**: Track Total Tuition Invoiced (e.g. ₹85,000), Paid Amount, and Remaining Due Balances in Indian Rupees.
-- **Dynamic Fee Status**:
-  - `🟢 Paid` — Full tuition cleared (₹0 balance)
-  - `🟠 Partial` — Partial payment credited with outstanding balance
-  - `🔴 Due / Overdue` — Pending balance with deadline tracking
-- **One-Click Payment Posting**: In-place modal to post tuition fee payments in ₹ with instant balance recalculation and persistent audit logging.
-- **Financial Collection KPIs**: Real-time campus fee realization rate progress bar and outstanding revenue analytics in Indian Rupees.
+### 💳 2. Tuition Fee Management (Indian Rupees ₹)
+- **Tuition Ledger in ₹ INR**: Total Tuition Invoiced (e.g., ₹85,000), Amount Paid, and Remaining Due Balances in Indian Rupees.
+- **Dynamic Fee Status Indicators**:
+  - `🟢 Paid` — Full tuition cleared (₹0 balance due)
+  - `🟠 Partial` — Partial payment credited with pending balance
+  - `🔴 Due / Overdue` — Pending balance with payment deadline tracking
+- **One-Click Payment Posting**: In-place modal sheet to record tuition payments in ₹ with instant balance recalculation and persistent audit logging.
+- **Financial Analytics**: Campus fee realization rate progress bar and real-time revenue collection metrics.
 
-### 📊 4. Dynamic Dashboard Overview
-- **Real-Time Database Statistics**:
-  - **Enrolled Students**: Live count from MySQL across academic departments.
-  - **Campus Average CGPA**: Institutional average on the 10.0 scale (e.g., `8.50 / 10.0`) and campus attendance rate.
-  - **Tuition Fees Collected (₹)**: Total payments received in INR and collection realization rate.
-  - **Outstanding Tuition Dues (₹)**: Real-time pending balance indicator.
-- **Department & Fee Breakdown Charts**: Interactive Chart.js Donut Charts with percentage distributions and automatic SVG fallback for offline environments.
-- **Persistent Activity Audit Stream**: Real audit events recorded directly into MySQL (`activity_logs` table) upon student creation, update, payment posting, deletion, and CSV import.
+### 📊 3. Real-Time Analytics & Audit Trail
+- **Live Statistics Cards**: Enrolled Students count, Campus Average CGPA, Tuition Fees Collected (₹), and Total Outstanding Dues (₹).
+- **Interactive Visualizations**: Interactive department enrollment and tuition realization charts.
+- **Audit Activity Stream**: Direct persistence of administrative actions in the `activity_logs` table for student enrollments, updates, payment receipts, deletions, and CSV imports.
 
-### 🧑‍🎓 5. Comprehensive Student Directory & Table
-- **Modern Data Table**:
-  - Dynamic initials avatars styled with a curated Apple pastel color palette.
-  - Roll number, full name, institutional email, department, semester.
-  - Color-coded 10.0 CGPA, attendance, and ₹ INR fee status badges.
-- **Instant Live Search**: Client-side filtering across student name, email, department, and roll number in real time.
-- **Multi-Level Filters**: Filter by Department, Semester (Sem 1 to 8), and Fee Status (Paid, Partial, Due, Overdue).
-- **Multi-Option Sorting**: Sort by Newest First, Oldest First, Name (A–Z), Highest CGPA, and Highest Due Fee.
-- **Modal Sheets**:
-  - **Enroll Student Modal**: Comprehensive 2-column modal for identity, 10.0 CGPA academic standing, and initial ₹ fee structure.
-  - **Edit Student Modal**: In-place modal to update all academic and billing metrics.
-  - **Student Profile Inspector**: Full dual-view card for academic standing (10.0 scale) and ₹ INR fee ledger.
-  - **Record Payment Modal**: Quick sheet to post fee payments in ₹ with immediate receipt confirmation.
-  - **Delete Confirmation Modal**: Custom destructive warning sheet with confirmation.
-- **Multi-Select & Bulk Deletion**: Batch student row selection with confirmation-gated atomic deletion.
-
-### 📁 6. CSV Import & Export Utilities
-- **RFC 4180-Compliant CSV Export**: One-click download of the entire registry (ID, Roll Number, Name, Email, Department, Semester, GPA, Attendance, Total Fee, Paid Fee, Due Balance, Fee Status, Registration Date) with UTF-8 BOM encoding.
-- **Batch CSV Import**: File dropzone for batch uploading students with duplicate checking and format validation.
+### 📁 4. CSV Import & Export Utilities
+- **RFC 4180-Compliant CSV Export**: One-click download of the entire database registry with UTF-8 BOM encoding.
+- **Batch CSV Import**: Drag-and-drop file upload for batch enrolling students with duplicate email validation.
 
 ---
 
@@ -77,48 +118,45 @@ The user interface follows the **Apple Human Interface Guidelines (macOS Sequoia
 
 ```mermaid
 graph TD
-    User([Browser / Client]) -->|Port 8081| App[Spring Boot 4.1.2 App Container]
+    Client([Web Browser / Client]) -->|HTTPS / Port 443| Render[Render Cloud Platform]
+    Client -->|HTTP / Port 8081| K8sLoadBalancer[Kubernetes LoadBalancer / NodePort 30081]
     
-    subgraph Docker Network
-        App -->|Port 3306| MySQL[(MySQL 8.4 Database Container)]
-    end
-    
-    subgraph Spring Boot Application Architecture
-        App --> Controller[StudentController]
-        Controller --> Service[StudentService]
-        Service --> StudentRepo[StudentRepository]
-        Service --> ActivityRepo[ActivityLogRepository]
-        StudentRepo --> MySQL
-        ActivityRepo --> MySQL
-        Controller --> Thymeleaf[Thymeleaf Engine & macOS Templates]
+    subgraph Render Cloud Web Service
+        Render --> CloudApp[Spring Boot Container :10000]
+        CloudApp -.->|Fallback when standalone| EmbeddedDB[(Embedded H2 MySQL Mode)]
+        CloudApp -.->|Optional Remote URL| CloudMySQL[(Remote Cloud MySQL)]
     end
 
-    subgraph CI/CD Pipeline
-        Git[GitHub Repository] -->|Webhook / SCM| Jenkins[Jenkins CI Pipeline]
-        Jenkins -->|Maven Build| JAR[app.jar]
-        Jenkins -->|Docker Build| ContainerImage[Docker Image]
-        ContainerImage -->|Compose Deploy| Production[Running Containers]
+    subgraph Kubernetes Production Cluster student-management
+        K8sLoadBalancer --> AppReplica1[Pod: app-deployment-1]
+        K8sLoadBalancer --> AppReplica2[Pod: app-deployment-2]
+        AppReplica1 -->|ClusterIP mysql-service:3306| K8sMySQL[(MySQL 8.4 Pod)]
+        AppReplica2 -->|ClusterIP mysql-service:3306| K8sMySQL
+        K8sMySQL --- PVC[(PersistentVolumeClaim 2Gi)]
+    end
+
+    subgraph CI/CD DevOps Pipeline
+        Developer[Developer / Git Push] --> GitHub[GitHub Repository]
+        GitHub -->|Webhook| RenderAutoDeploy[Render Continuous Deploy]
+        GitHub -->|SCM Trigger| Jenkins[Jenkins CI/CD Automation]
+        Jenkins -->|1. Checkout| Stage1[Git Checkout]
+        Stage1 -->|2. Maven Package| Stage2[mvn package]
+        Stage2 -->|3. Docker Build| Stage3[Docker Image Build]
+        Stage3 -->|4. K8s Rollout| Stage4[kubectl apply -f k8s/]
+        Stage4 -->|5. Smoke Test| Stage5[HTTP Health Check]
     end
 ```
 
 ---
 
-## 💻 Technology Stack
+## 🚀 Deployment & Execution Guide
 
-| Layer | Technologies |
-| :--- | :--- |
-| **Backend** | Java 21, Spring Boot 4.1.2, Spring Data JPA, Hibernate ORM |
-| **Database** | MySQL 8.4 Community Edition |
-| **Frontend** | Thymeleaf 3.x, HTML5, Vanilla JavaScript (ES6+), CSS3 (macOS Design Tokens), Chart.js |
-| **DevOps & Containers** | Docker, Docker Compose, Eclipse Temurin 21 JRE Base Image |
-| **CI / CD** | Git, GitHub, Jenkins Pipeline |
-| **Build Tool** | Apache Maven 3.9+ |
+### Option 1: Live Cloud Link (Instant Access)
+Open **[https://student-management-devops-kxfv.onrender.com/](https://student-management-devops-kxfv.onrender.com/)** in any modern web browser.
 
 ---
 
-## 🚀 Getting Started
-
-### Option 1: Running with Docker Compose (Recommended)
+### Option 2: Running with Docker Compose (Local Multi-Container)
 
 1. **Clone the repository:**
    ```bash
@@ -131,140 +169,69 @@ graph TD
    mvn package -DskipTests
    ```
 
-3. **Start the containers via Docker Compose:**
+3. **Start the multi-container stack (Spring Boot + MySQL 8.4):**
    ```bash
    docker compose up -d --build
    ```
 
-4. **Access the application at:** `http://localhost:8081`
+4. **Access the application:** Open `http://localhost:8081` in your browser.
 
 ---
 
-### Option 2: Running Locally with Maven
+### Option 3: Kubernetes Deployment (Docker Desktop / Minikube)
 
-1. **Start a local MySQL 8.4 instance** and verify `src/main/resources/application.properties` credentials:
-   ```properties
-   spring.datasource.url=jdbc:mysql://localhost:3306/student_management
-   spring.datasource.username=root
-   spring.datasource.password=your_mysql_password
-   server.port=8081
-   ```
+The `k8s/` directory contains complete production manifests:
 
-2. **Compile and run the Spring Boot application:**
-   ```bash
-   mvn clean spring-boot:run
-   ```
-
-3. **Access the application at:** `http://localhost:8081`
-
----
-
-### Option 3: Running with Kubernetes (Docker Desktop / Minikube / K8s Cluster)
-
-The project includes production-grade Kubernetes manifests located in the `k8s/` directory with persistent volume claims, secrets, config maps, multi-replica deployments, and health probes.
-
-#### Kubernetes Architecture Overview:
-* **Namespace (`k8s/00-namespace.yaml`)**: Isolated `student-management` namespace.
-* **Secrets (`k8s/01-mysql-secret.yaml`)**: Base64/Opaque storage for MySQL credentials (`MYSQL_ROOT_PASSWORD`).
-* **ConfigMap (`k8s/02-app-configmap.yaml`)**: Non-sensitive runtime variables (`DB_HOST`, `DB_PORT`, `SPRING_PROFILES_ACTIVE`).
-* **Persistent Volume Claim (`k8s/03-mysql-pvc.yaml`)**: 2Gi volume retaining database state across pod lifecycles.
-* **MySQL Deployment & Service (`k8s/04-*.yaml`, `k8s/05-*.yaml`)**: MySQL 8.4 pod with readiness/liveness health probes and a `ClusterIP` service (`mysql-service:3306`).
-* **Application Deployment & Service (`k8s/06-*.yaml`, `k8s/07-*.yaml`)**: 2-replica Spring Boot deployment with rolling updates, zero downtime, and a `LoadBalancer` / `NodePort` service mapping port 8081 and nodePort 30081.
-
-#### 1-Click Deployment:
-* **Using PowerShell (Windows)**:
+* **Deploy all resources with 1 command:**
   ```powershell
+  # Windows PowerShell:
   .\deploy-k8s.ps1
-  ```
-* **Using Bash (Linux/macOS)**:
-  ```bash
+
+  # Linux / macOS Bash:
   chmod +x deploy-k8s.sh
   ./deploy-k8s.sh
   ```
-* **Using `kubectl` Directly**:
-  ```bash
-  # Apply all resources in order:
-  kubectl apply -f k8s/
 
-  # Or using Kustomize:
+* **Or apply using `kubectl` / `kustomize`:**
+  ```bash
   kubectl apply -k k8s/
   ```
 
-#### Verify Cluster Status:
-```bash
-# Check all pods, deployments, and services in the namespace
-kubectl get all -n student-management
-
-# Stream live application logs across replicas
-kubectl logs -f -l app=student-management-app -n student-management
-
-# Scale application pods dynamically
-kubectl scale deployment app-deployment --replicas=3 -n student-management
-```
-
-#### Access the Application:
-* **Direct Web URL**: `http://localhost:8081` (LoadBalancer) or `http://localhost:30081` (NodePort)
-* **Port-Forwarding (Optional)**:
+* **Verify Kubernetes status:**
   ```bash
-  kubectl port-forward svc/app-service 8081:8081 -n student-management
+  kubectl get all -n student-management
   ```
 
-#### Teardown / Cleanup:
-```bash
-kubectl delete -f k8s/
-# or:
-.\undeploy-k8s.ps1
-```
+* **Access the application:** `http://localhost:8081` or `http://localhost:30081`.
 
 ---
 
-### Option 4: Deploying on Vercel & Cloud
+### Option 4: Jenkins CI/CD Automation Pipeline
 
-This repository is pre-configured with [`vercel.json`](file:///c:/Users/Chandini%20Mohammad/OneDrive/Attachments/Documents/DevOps-Student-Management/demo/vercel.json) and a production [`public/`](file:///c:/Users/Chandini%20Mohammad/OneDrive/Attachments/Documents/DevOps-Student-Management/demo/public) showcase for 1-click cloud deployment on Vercel:
+The repository includes a declarative [`Jenkinsfile`](file:///c:/Users/Chandini%20Mohammad/OneDrive/Attachments/Documents/DevOps-Student-Management/demo/Jenkinsfile):
 
-1. Go to [Vercel Dashboard](https://vercel.com) and click **"Add New Project"**.
-2. Import the GitHub repository [`Mohammad23chandini/Student-Management-DevOps`](https://github.com/Mohammad23chandini/Student-Management-DevOps.git).
-3. Set the **Root Directory** to `demo` (or leave default `/` if deploying from root).
-4. Click **Deploy**. Vercel will instantly publish your live interactive macOS Student Management Dashboard on a public `*.vercel.app` URL!
-
-> [!NOTE]
-> * **Vercel** serves the ultra-fast global edge frontend with client-side interactive search, 10.0 CGPA tracking, ₹ INR fee ledgers, and telemetry.
-> * To run the live Java 21 Spring Boot + MySQL backend online, use the included [`render.yaml`](file:///c:/Users/Chandini%20Mohammad/OneDrive/Attachments/Documents/DevOps-Student-Management/demo/render.yaml) for 1-click full-stack deployment on **Render.com** or **Railway.app**.
-
----
-
-### Option 5: Continuous Integration & Delivery with Jenkins (CI/CD)
-
-The project includes an enterprise-grade declarative [`Jenkinsfile`](file:///c:/Users/Chandini%20Mohammad/OneDrive/Attachments/Documents/DevOps-Student-Management/demo/Jenkinsfile) automating the full DevOps pipeline:
-
-#### Pipeline Stages:
-1. **Stage 1 (Checkout SCM)**: Clones the latest commit from GitHub `main` branch.
-2. **Stage 2 (Maven Package)**: Executes `mvn clean package -DskipTests` to build the JAR.
-3. **Stage 3 (Docker Build)**: Builds container images tagged as `latest` and with build number `${BUILD_NUMBER}`.
-4. **Stage 4 (Kubernetes Rollout)**: Automatically deploys and updates pods via `kubectl apply -f k8s/` and waits for rollout completion.
-5. **Stage 5 (Smoke & Healthcheck)**: Probes `/api/stats` to verify real-time cluster readiness.
-
-#### Setting up the Pipeline in Jenkins:
-1. Open Jenkins (`http://localhost:8080`).
-2. Click **"New Item"** $\rightarrow$ select **"Pipeline"** $\rightarrow$ enter project name: `student-management-pipeline`.
-3. Under **Pipeline Definition**, select **"Pipeline script from SCM"**.
-4. Choose **SCM**: `Git` and set Repository URL to:
-   `https://github.com/Mohammad23chandini/Student-Management-DevOps.git`
-5. Set Script Path: `Jenkinsfile` (or `demo/Jenkinsfile`).
-6. Click **Save** and click **"Build Now"** to trigger the automated CI/CD pipeline!
+1. Open your Jenkins dashboard (e.g. `http://localhost:8082` or `http://localhost:8080`).
+2. Create a **New Item** $\rightarrow$ select **Pipeline** $\rightarrow$ name it `Student-Management-CI`.
+3. Under **Pipeline Definition**, select **Pipeline script from SCM**.
+4. Configure:
+   * **SCM**: `Git`
+   * **Repository URL**: `https://github.com/Mohammad23chandini/Student-Management-DevOps.git`
+   * **Branch**: `*/main`
+   * **Script Path**: `Jenkinsfile`
+5. Click **Save** $\rightarrow$ click **Build Now** to trigger the automated 5-stage pipeline.
 
 ---
 
-## 📡 REST API & Web Routes Reference
+## 📡 REST API & Web Routes
 
 | HTTP Method | Route | Description |
 | :--- | :--- | :--- |
 | `GET` | `/` | Dashboard Overview with Academic KPIs, Financial Metrics & Activity Feed |
-| `GET` | `/students` | All Students Directory with Academic & Billing Table, Search & Filters |
-| `POST` | `/students` | Enroll a new student record (with academic standing & fee structure) |
+| `GET` | `/students` | Student Directory Table with Academic & Billing Ledgers, Search & Filters |
+| `POST` | `/students` | Enroll a new student record (10.0 CGPA & ₹ fee structure) |
 | `GET` | `/students/edit/{id}` | Standalone edit page for student academic and fee profile |
 | `POST` | `/students/update/{id}` | Update existing student academic and financial details |
-| `POST` | `/students/payment/{id}` | Record and post tuition fee payments |
+| `POST` | `/students/payment/{id}` | Record and post tuition fee payments in ₹ INR |
 | `GET` | `/students/delete/{id}` | Delete a student record by ID |
 | `POST` | `/students/bulk-delete` | Batch delete selected student IDs |
 | `GET` | `/students/export` | Download full registry CSV export (with GPA, Attendance, Fees) |
@@ -274,31 +241,28 @@ The project includes an enterprise-grade declarative [`Jenkinsfile`](file:///c:/
 | `GET` | `/settings` | System tech stack runtime metadata & theme config |
 | `GET` | `/api/stats` | JSON endpoint returning live academic and financial metrics |
 | `GET` | `/api/students/{id}` | JSON endpoint returning individual student data |
-| `POST` | `/students/seed-demo` | Seeds realistic multi-department records with GPA and fee statuses |
 
 ---
 
 ## 🗄️ Database Schema Evolution
 
-Hibernate automatically synchronizes the MySQL database schema using `spring.jpa.hibernate.ddl-auto=update`.
-
 ### `students` Table
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `id` | `BIGINT` | PRIMARY KEY, AUTO_INCREMENT | Unique student identifier |
-| `roll_number` | `VARCHAR(255)` | NULL | Institutional Roll / ID number |
-| `name` | `VARCHAR(255)` | NOT NULL | Legal student full name |
-| `email` | `VARCHAR(255)` | NOT NULL, UNIQUE | Campus or personal email |
-| `course` | `VARCHAR(255)` | NOT NULL | Department / Academic program |
+| `roll_number` | `VARCHAR(255)` | NULL | Institutional Roll / ID number (e.g., `23CSE045`) |
+| `name` | `VARCHAR(255)` | NOT NULL | Full student name |
+| `email` | `VARCHAR(255)` | NOT NULL, UNIQUE | Student email address |
+| `course` | `VARCHAR(255)` | NOT NULL | Academic Department |
 | `semester` | `VARCHAR(255)` | NULL | Current academic semester (`Semester 1`–`8`) |
 | `gpa` | `DOUBLE` | NULL | Cumulative Grade Point Average on 10.0 scale (0.00 – 10.00) |
-| `attendance` | `INTEGER` | NULL | Attendance percentage (0 – 100) |
-| `academic_status` | `VARCHAR(255)` | NULL | Standing (`Distinction`, `First Class`, `Second Class`, `Academic Warning`) |
-| `total_fee` | `DOUBLE` | NULL | Total tuition fee invoiced in Indian Rupees (₹) |
-| `paid_fee` | `DOUBLE` | NULL | Total fee payments received in Indian Rupees (₹) |
+| `attendance` | `INTEGER` | NULL | Attendance percentage (0 – 100%) |
+| `academic_status` | `VARCHAR(255)` | NULL | Classification (`Distinction`, `First Class`, `Second Class`, `Academic Warning`) |
+| `total_fee` | `DOUBLE` | NULL | Total tuition invoiced in Indian Rupees (`₹`) |
+| `paid_fee` | `DOUBLE` | NULL | Total tuition payments received in Indian Rupees (`₹`) |
 | `fee_status` | `VARCHAR(255)` | NULL | Status (`PAID`, `PARTIAL`, `DUE`, `OVERDUE`) |
-| `fee_due_date` | `DATE` | NULL | Tuition payment deadline |
-| `registration_date` | `DATE` | NULL | Initial enrollment date |
+| `fee_due_date` | `DATE` | NULL | Payment deadline |
+| `registration_date` | `DATE` | NULL | Enrollment date |
 
 ---
 
