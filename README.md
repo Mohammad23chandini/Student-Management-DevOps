@@ -77,8 +77,7 @@ The user interface is crafted strictly in accordance with **Apple Human Interfac
 * **GitHub Actions (`.github/workflows/ci.yml`)**: Cloud-native CI pipeline executing on every push and pull request.
 
 ### 6. Cloud Hosting & Deployment
-* **Render.com**: Automated Docker Web Service hosting the live application container with SSL encryption, continuous deployment on Git push, and automatic health monitoring.
-* **Vercel**: Edge preview configuration (`vercel.json`) and static dashboard showcase (`public/`).
+* **Render.com**: Automated Docker Web Service hosting the live application container with SSL encryption, continuous deployment on Git push, health monitoring, and public access at [`https://student-management-devops-kxfv.onrender.com/`](https://student-management-devops-kxfv.onrender.com/).
 
 ---
 
