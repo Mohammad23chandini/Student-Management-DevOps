@@ -1,78 +1,159 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
 <head>
-    <title>Update Student</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f4f6f9;
-            margin: 0;
-            padding: 30px;
-        }
-
-        .container {
-            max-width: 500px;
-            margin: 50px auto;
-            background: white;
-            padding: 25px;
-            border-radius: 10px;
-        }
-
-        h1 {
-            text-align: center;
-            color: #263b5e;
-        }
-
-        input, button {
-            width: 100%;
-            padding: 12px;
-            margin: 10px 0;
-            box-sizing: border-box;
-        }
-
-        button {
-            background: #263b5e;
-            color: white;
-            border: none;
-            cursor: pointer;
-        }
-
-        a {
-            display: block;
-            text-align: center;
-            margin-top: 15px;
-            color: #263b5e;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Student — Student Management Pro</title>
+    
+    <!-- macOS Dashboard Design System -->
+    <link rel="stylesheet" th:href="@{/css/macos-dashboard.css}">
 </head>
+<body style="display: flex; align-items: center; justify-content: center; min-height: 100vh;">
 
-<body>
+<!-- Toast Notifications -->
+<div class="toast-container">
+    <div th:if="${errorMessage}" class="macos-toast">
+        <div class="toast-icon error">✕</div>
+        <div class="toast-content">
+            <div class="toast-title">Attention</div>
+            <div class="toast-msg" th:text="${errorMessage}">An error occurred.</div>
+        </div>
+    </div>
+</div>
 
-<div class="container">
+<!-- macOS Window Frame -->
+<div class="macos-window" style="max-width: 540px; min-height: auto;">
 
-    <h1>Update Student</h1>
+    <!-- macOS Titlebar -->
+    <header class="window-header">
+        <div class="window-traffic-lights">
+            <a th:href="@{/students}" class="traffic-light close" title="Back to Students"></a>
+            <span class="traffic-light minimize"></span>
+            <span class="traffic-light zoom"></span>
+        </div>
 
-    <form th:action="@{/students/update/{id}(id=${student.id})}" method="post">
+        <div class="window-title-container">
+            <div class="window-app-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                </svg>
+            </div>
+            <span>Edit Student Profile</span>
+        </div>
 
-        <input type="text" name="name"
-               th:value="${student.name}" placeholder="Student Name" required>
+        <div class="window-header-actions">
+            <a th:href="@{/students}" class="btn btn-subtle btn-sm" style="font-size: 11px;">✕ Cancel</a>
+        </div>
+    </header>
 
-        <input type="email" name="email"
-               th:value="${student.email}" placeholder="Student Email" required>
+    <!-- Window Body Form -->
+    <div style="padding: 28px 24px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border-subtle);">
+            <div class="student-avatar" style="width: 48px; height: 48px; font-size: 16px; background: linear-gradient(135deg, #0071e3, #47a6ff);"
+                 th:text="${student.initials}">ST</div>
+            <div>
+                <h2 style="font-size: 18px; font-weight: 650; color: var(--text-primary); margin-bottom: 2px;" th:text="${student.name}">Student Name</h2>
+                <div style="font-size: 12px; color: var(--text-tertiary);" th:text="'Student ID: #' + ${student.id}">Student ID: #1</div>
+            </div>
+        </div>
 
-        <input type="text" name="course"
-               th:value="${student.course}" placeholder="Course" required>
+        <form th:action="@{/students/update/{id}(id=${student.id})}" method="post" class="needs-validation">
+            <div class="form-group">
+                <label class="form-label">Full Name <span class="required">*</span></label>
+                <input type="text" name="name" th:value="${student.name}" class="form-input" required autofocus>
+                <div class="form-helper">Student legal name.</div>
+            </div>
 
-        <button type="submit">Update Student</button>
+            <div class="form-group">
+                <label class="form-label">Email Address <span class="required">*</span></label>
+                <input type="email" name="email" th:value="${student.email}" class="form-input" required>
+                <div class="form-helper">Campus or personal email address.</div>
+            </div>
 
-    </form>
+            <div class="form-group">
+                <label class="form-label">Department / Course <span class="required">*</span></label>
+                <input list="departments-list-edit" name="course" th:value="${student.course}" class="form-input" required>
+                <datalist id="departments-list-edit">
+                    <option value="Computer Science">
+                    <option value="Information Technology">
+                    <option value="Data Science">
+                    <option value="Electronics & Communication">
+                    <option value="Mechanical Engineering">
+                    <option value="Civil Engineering">
+                    <option value="Business Administration">
+                </datalist>
+                <div class="form-helper">Current academic program.</div>
+            </div>
 
-    <a th:href="@{/}">Back to Student Records</a>
+            <div class="form-group">
+                <label class="form-label">Registration Date</label>
+                <input type="date" name="registrationDate" th:value="${student.registrationDate}" class="form-input">
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border-subtle);">
+                <a th:href="@{/students}" class="btn btn-secondary">
+                    <span>Cancel</span>
+                </a>
+
+                <div style="display: flex; gap: 10px;">
+                    <a th:href="@{/students/delete/{id}(id=${student.id})}"
+                       onclick="return confirm('Are you sure you want to permanently delete this student record?')"
+                       class="btn btn-danger btn-sm" style="padding: 7px 12px;">
+                        <span>Delete</span>
+                    </a>
+
+                    <button type="submit" class="btn btn-primary">
+                        <span>Save Changes</span>
+                    </button>
+                </div>
+            </div>
+        </form>
+    </div>
 
 </div>
+
+<!-- Real-time form validation script -->
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const form = document.querySelector('form.needs-validation');
+        if (!form) return;
+
+        const nameInput = form.querySelector('[name="name"]');
+        const emailInput = form.querySelector('[name="email"]');
+        const courseInput = form.querySelector('[name="course"]');
+
+        const validateName = () => {
+            const valid = nameInput.value.trim().length >= 2;
+            nameInput.style.borderColor = valid ? 'var(--accent-green)' : 'var(--accent-red)';
+            return valid;
+        };
+
+        const validateEmail = () => {
+            const val = emailInput.value.trim();
+            const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,63}$/;
+            const valid = emailRegex.test(val);
+            emailInput.style.borderColor = valid ? 'var(--accent-green)' : 'var(--accent-red)';
+            return valid;
+        };
+
+        const validateCourse = () => {
+            const valid = courseInput.value.trim().length > 0;
+            courseInput.style.borderColor = valid ? 'var(--accent-green)' : 'var(--accent-red)';
+            return valid;
+        };
+
+        nameInput.addEventListener('input', validateName);
+        emailInput.addEventListener('input', validateEmail);
+        courseInput.addEventListener('change', validateCourse);
+
+        form.addEventListener('submit', (e) => {
+            if (!validateName() || !validateEmail() || !validateCourse()) {
+                e.preventDefault();
+                alert('Please ensure all required fields are correctly completed.');
+            }
+        });
+    });
+</script>
 
 </body>
 </html>
