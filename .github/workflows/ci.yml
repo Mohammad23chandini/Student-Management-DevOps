@@ -1,0 +1,36 @@
+name: Student Management CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    name: Build, Package & Containerize
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 1. Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: 2. Set up Java 21 (Eclipse Temurin)
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
+
+      - name: 3. Compile & Package JAR with Maven
+        run: mvn clean package -DskipTests
+
+      - name: 4. Build Docker Container Image
+        run: |
+          docker build -t student-management-app:latest .
+          docker tag student-management-app:latest student-management-app:${{ github.sha }}
+
+      - name: 5. Verify Build Artifacts
+        run: |
+          ls -la target/*.jar
+          docker images | grep student-management-app
