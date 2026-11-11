@@ -218,6 +218,21 @@ kubectl delete -f k8s/
 
 ---
 
+### Option 4: Deploying on Vercel & Cloud
+
+This repository is pre-configured with [`vercel.json`](file:///c:/Users/Chandini%20Mohammad/OneDrive/Attachments/Documents/DevOps-Student-Management/demo/vercel.json) and a production [`public/`](file:///c:/Users/Chandini%20Mohammad/OneDrive/Attachments/Documents/DevOps-Student-Management/demo/public) showcase for 1-click cloud deployment on Vercel:
+
+1. Go to [Vercel Dashboard](https://vercel.com) and click **"Add New Project"**.
+2. Import the GitHub repository [`Mohammad23chandini/Student-Management-DevOps`](https://github.com/Mohammad23chandini/Student-Management-DevOps.git).
+3. Set the **Root Directory** to `demo` (or leave default `/` if deploying from root).
+4. Click **Deploy**. Vercel will instantly publish your live interactive macOS Student Management Dashboard on a public `*.vercel.app` URL!
+
+> [!NOTE]
+> * **Vercel** serves the ultra-fast global edge frontend with client-side interactive search, 10.0 CGPA tracking, ₹ INR fee ledgers, and telemetry.
+> * To run the live Java 21 Spring Boot + MySQL backend online, use the included [`render.yaml`](file:///c:/Users/Chandini%20Mohammad/OneDrive/Attachments/Documents/DevOps-Student-Management/demo/render.yaml) for 1-click full-stack deployment on **Render.com** or **Railway.app**.
+
+---
+
 ## 📡 REST API & Web Routes Reference
 
 | HTTP Method | Route | Description |

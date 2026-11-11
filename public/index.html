@@ -1,0 +1,684 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Student Management Pro — macOS Dashboard</title>
+    
+    <!-- macOS Dashboard Design System -->
+    <link rel="stylesheet" href="css/macos-dashboard.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+        .devops-banner {
+            background: linear-gradient(90deg, rgba(0,113,227,0.12), rgba(175,82,222,0.12));
+            border-bottom: 1px solid var(--border-subtle);
+            padding: 8px 16px;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            color: var(--text-secondary);
+        }
+        .devops-pills {
+            display: flex;
+            gap: 8px;
+        }
+        .devops-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+            background: var(--bg-surface-secondary);
+            border: 1px solid var(--border-subtle);
+        }
+    </style>
+</head>
+<body>
+
+<!-- Toast Notification Container -->
+<div class="toast-container" id="toast-container"></div>
+
+<!-- Main macOS Window Frame -->
+<div class="macos-window">
+
+    <!-- macOS Titlebar -->
+    <header class="window-header">
+        <div class="window-traffic-lights">
+            <span class="traffic-light close" id="traffic-close" title="Close Window"></span>
+            <span class="traffic-light minimize" id="traffic-minimize" title="Minimize Window"></span>
+            <span class="traffic-light zoom" id="traffic-zoom" title="Toggle Fullscreen"></span>
+        </div>
+
+        <div class="window-title-container">
+            <div class="window-app-icon">
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                </svg>
+            </div>
+            <span>Student Management Pro</span>
+            <span class="system-badge">
+                <span class="badge-dot"></span>
+                <span>Kubernetes & Vercel Live</span>
+            </span>
+        </div>
+
+        <div class="window-header-actions">
+            <span class="header-clock" id="system-clock">Loading time...</span>
+
+            <button class="theme-toggle-btn" id="theme-toggle-btn" title="Toggle Light / Dark Mode" type="button">
+                <svg id="moon-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/>
+                </svg>
+                <svg id="sun-icon" style="display:none;" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="4"/>
+                    <path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M6.34 17.66l-1.41 1.41M19.07 4.93l-1.41 1.41"/>
+                </svg>
+            </button>
+
+            <div class="user-profile-chip">
+                <div class="user-avatar-small">CM</div>
+                <span>Chandini Mohammad</span>
+            </div>
+        </div>
+    </header>
+
+    <!-- DevOps Deployment Banner -->
+    <div class="devops-banner">
+        <div>
+            <strong>DevOps Stack:</strong> Spring Boot 4.1.2 • Java 21 • MySQL 8.4 • Kubernetes ☸️ • Docker • Vercel
+        </div>
+        <div class="devops-pills">
+            <span class="devops-pill">☸️ K8s Ready</span>
+            <span class="devops-pill">⚡ Vercel Live</span>
+            <span class="devops-pill">💰 INR (₹) Ledger</span>
+            <span class="devops-pill">🎓 10.0 CGPA</span>
+        </div>
+    </div>
+
+    <!-- macOS Window Body -->
+    <div class="window-body">
+
+        <!-- Sidebar Navigation -->
+        <aside class="macos-sidebar">
+            <div class="sidebar-nav-group">
+                <div class="sidebar-section-title">Navigation</div>
+
+                <a href="#overview" class="nav-item active" data-section="overview">
+                    <span class="nav-item-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <rect width="7" height="9" x="3" y="3" rx="1"/>
+                            <rect width="7" height="5" x="14" y="3" rx="1"/>
+                            <rect width="7" height="9" x="14" y="12" rx="1"/>
+                            <rect width="7" height="5" x="3" y="16" rx="1"/>
+                        </svg>
+                    </span>
+                    <span class="nav-item-label">Overview</span>
+                </a>
+
+                <a href="#students" class="nav-item" data-section="students">
+                    <span class="nav-item-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                            <circle cx="9" cy="7" r="4"/>
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                        </svg>
+                    </span>
+                    <span class="nav-item-label">All Students</span>
+                    <span class="nav-badge" id="sidebar-student-count">12</span>
+                </a>
+
+                <a href="#analytics" class="nav-item" data-section="analytics">
+                    <span class="nav-item-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M3 3v18h18"/>
+                            <path d="m19 9-5 5-4-4-3 3"/>
+                        </svg>
+                    </span>
+                    <span class="nav-item-label">Analytics</span>
+                </a>
+
+                <a href="#reports" class="nav-item" data-section="reports">
+                    <span class="nav-item-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M14.5 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V7.5L14.5 2z"/>
+                            <polyline points="14 2 14 8 20 8"/>
+                            <line x1="16" x2="8" y1="13" y2="13"/>
+                            <line x1="16" x2="8" y1="17" y2="17"/>
+                        </svg>
+                    </span>
+                    <span class="nav-item-label">Reports & CSV</span>
+                </a>
+
+                <a href="#settings" class="nav-item" data-section="settings">
+                    <span class="nav-item-icon">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"/>
+                            <circle cx="12" cy="12" r="3"/>
+                        </svg>
+                    </span>
+                    <span class="nav-item-label">DevOps & K8s</span>
+                </a>
+            </div>
+
+            <!-- Quick Action button -->
+            <div class="sidebar-quick-action">
+                <button class="btn btn-primary btn-block btn-open-modal" data-modal="modal-add-student" type="button">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" x2="12" y1="5" y2="19"/>
+                        <line x1="5" x2="19" y1="12" y2="12"/>
+                    </svg>
+                    <span>Enroll Student</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="macos-main-content">
+
+            <!-- Top Action Header -->
+            <div class="content-header-bar">
+                <div class="content-title-area">
+                    <h1 id="content-header-title">Dashboard Overview</h1>
+                    <p id="content-header-desc">Real-time academic performance & fee collection statistics</p>
+                </div>
+
+                <div class="header-action-group">
+                    <button class="btn btn-secondary" onclick="exportStaticCsv()" type="button">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+                            <polyline points="7 10 12 15 17 10"/>
+                            <line x1="12" x2="12" y1="15" y2="3"/>
+                        </svg>
+                        <span>Export CSV</span>
+                    </button>
+
+                    <button class="btn btn-primary btn-open-modal" data-modal="modal-add-student" type="button">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" x2="12" y1="5" y2="19"/>
+                            <line x1="5" x2="19" y1="12" y2="12"/>
+                        </svg>
+                        <span>Add Student</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ===================================================================
+                 SECTION 1: DASHBOARD OVERVIEW
+                 =================================================================== -->
+            <section class="view-section active" id="section-overview">
+
+                <!-- 4 KPI Cards: Academic (10.0 CGPA) + Financial (₹ INR) -->
+                <div class="stats-grid">
+                    <!-- Total Students -->
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-card-title">Total Enrolled</span>
+                            <div class="stat-card-icon blue">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
+                                    <circle cx="9" cy="7" r="4"/>
+                                    <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
+                                    <path d="M16 3.13a4 4 0 0 1 0 7.75"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-card-value">12</div>
+                        <div class="stat-card-footer">
+                            <span class="trend-pill positive">● Live Records</span>
+                            <span>Across <strong>7</strong> departments</span>
+                        </div>
+                    </div>
+
+                    <!-- Academic Performance: Average CGPA (10.0 Scale) -->
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-card-title">Average CGPA (10.0 Scale)</span>
+                            <div class="stat-card-icon purple">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="stat-card-value">8.76 / 10.0</div>
+                        <div class="stat-card-footer">
+                            <span class="trend-pill positive">94% Attendance</span>
+                            <span>Campus Cumulative CGPA</span>
+                        </div>
+                    </div>
+
+                    <!-- Tuition Fees Collected (₹ INR) -->
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-card-title">Fees Collected (₹)</span>
+                            <div class="stat-card-icon green">
+                                <span style="font-weight: 700; font-size: 16px;">₹</span>
+                            </div>
+                        </div>
+                        <div class="stat-card-value">₹8,40,000</div>
+                        <div class="stat-card-footer">
+                            <span class="trend-pill positive">85.3% Collected</span>
+                            <span>Realization Rate</span>
+                        </div>
+                    </div>
+
+                    <!-- Tuition Fees Outstanding Due (₹ INR) -->
+                    <div class="stat-card">
+                        <div class="stat-card-header">
+                            <span class="stat-card-title">Outstanding Dues (₹)</span>
+                            <div class="stat-card-icon orange">
+                                <span style="font-weight: 700; font-size: 16px;">₹</span>
+                            </div>
+                        </div>
+                        <div class="stat-card-value">₹1,45,000</div>
+                        <div class="stat-card-footer">
+                            <span class="trend-pill warning">4 Accounts Pending</span>
+                            <span>Tuition Receivables</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Charts Section -->
+                <div class="dashboard-grid-2">
+                    <!-- Department Breakdown -->
+                    <div class="content-card">
+                        <div class="content-card-header">
+                            <div>
+                                <h3 class="card-title">Department Distribution</h3>
+                                <p class="card-subtitle">Active student enrollment by academic discipline</p>
+                            </div>
+                        </div>
+                        <div class="chart-container-box">
+                            <canvas id="chart-departments" height="190"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Fee Status Breakdown -->
+                    <div class="content-card">
+                        <div class="content-card-header">
+                            <div>
+                                <h3 class="card-title">Fee Collection Status</h3>
+                                <p class="card-subtitle">Paid, Partial and Pending tuition fee distribution</p>
+                            </div>
+                        </div>
+                        <div class="chart-container-box">
+                            <canvas id="chart-fee-status" height="190"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+            </section>
+
+            <!-- ===================================================================
+                 SECTION 2: ALL STUDENTS DIRECTORY
+                 =================================================================== -->
+            <section class="view-section" id="section-students">
+                <!-- Controls & Filters Toolbar -->
+                <div class="table-toolbar">
+                    <div class="search-input-wrapper">
+                        <svg class="search-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <circle cx="11" cy="11" r="8"/>
+                            <line x1="21" x2="21" y1="21" y2="16.65"/>
+                        </svg>
+                        <input type="text" class="search-input" id="table-search-input" placeholder="Search by name, roll no, email, or dept...">
+                    </div>
+
+                    <div class="filter-controls-group">
+                        <select class="filter-select" id="filter-department">
+                            <option value="">All Departments</option>
+                            <option value="Computer Science">Computer Science</option>
+                            <option value="Data Science">Data Science</option>
+                            <option value="Information Technology">Information Technology</option>
+                            <option value="Mechanical Engineering">Mechanical Engineering</option>
+                            <option value="Electrical Engineering">Electrical Engineering</option>
+                            <option value="Business Administration">Business Administration</option>
+                        </select>
+
+                        <select class="filter-select" id="filter-fee-status">
+                            <option value="">All Fee Statuses</option>
+                            <option value="PAID">🟢 Paid</option>
+                            <option value="PARTIAL">🟠 Partial Payment</option>
+                            <option value="DUE">🔴 Pending Due</option>
+                        </select>
+
+                        <select class="filter-select" id="sort-select">
+                            <option value="newest">Sort: Newest First</option>
+                            <option value="name_asc">Sort: Name (A–Z)</option>
+                            <option value="gpa_desc">Sort: Highest CGPA</option>
+                            <option value="due_desc">Sort: Highest Due (₹)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Modern Student Data Table -->
+                <div class="table-card-container">
+                    <table class="macos-table" id="students-table">
+                        <thead>
+                            <tr>
+                                <th style="width: 32px;"><input type="checkbox" class="macos-checkbox" id="select-all-checkbox"></th>
+                                <th style="width: 100px;">Roll No</th>
+                                <th>Student</th>
+                                <th>Department & Semester</th>
+                                <th>CGPA (10.0)</th>
+                                <th>Attendance</th>
+                                <th>Tuition Status (₹)</th>
+                                <th style="text-align: right; width: 110px;">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="students-tbody">
+                            <tr data-id="1" data-name="Lakshmi Prasanna" data-email="lakshmi2132@gmail.com" data-dept="Computer Science" data-roll="23CSE001" data-sem="Semester 6" data-gpa="8.85" data-att="94" data-status="First Class" data-total="85000" data-paid="85000" data-due="0" data-fee="PAID">
+                                <td><input type="checkbox" class="macos-checkbox student-row-checkbox" value="1"></td>
+                                <td><span class="student-meta-roll">23CSE001</span></td>
+                                <td>
+                                    <div class="student-profile-cell">
+                                        <div class="student-avatar">LP</div>
+                                        <div>
+                                            <div class="student-meta-name">Lakshmi Prasanna</div>
+                                            <div class="student-meta-roll">lakshmi2132@gmail.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div><span class="dept-badge">Computer Science</span></div><div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">Semester 6</div></td>
+                                <td><div><span class="gpa-pill">CGPA 8.85</span></div><div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">First Class</div></td>
+                                <td><span class="attendance-pill high">94%</span></td>
+                                <td>
+                                    <div><span class="fee-badge PAID">🟢 Paid</span></div>
+                                    <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">All Fees Paid (₹0 Due)</div>
+                                </td>
+                                <td style="text-align: right;">
+                                    <div class="action-btn-group" style="justify-content: flex-end;">
+                                        <button class="action-icon-btn btn-view-details" type="button" title="View Full Profile">👁️</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-id="2" data-name="Jahanvi Sharma" data-email="jahnavi343@gmail.com" data-dept="Computer Science" data-roll="23CSE015" data-sem="Semester 6" data-gpa="9.20" data-att="96" data-status="Distinction" data-total="85000" data-paid="50000" data-due="35000" data-fee="PARTIAL">
+                                <td><input type="checkbox" class="macos-checkbox student-row-checkbox" value="2"></td>
+                                <td><span class="student-meta-roll">23CSE015</span></td>
+                                <td>
+                                    <div class="student-profile-cell">
+                                        <div class="student-avatar" style="background:#5e5ce6;">JS</div>
+                                        <div>
+                                            <div class="student-meta-name">Jahanvi Sharma</div>
+                                            <div class="student-meta-roll">jahnavi343@gmail.com</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div><span class="dept-badge">Computer Science</span></div><div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">Semester 6</div></td>
+                                <td><div><span class="gpa-pill honors">CGPA 9.20</span></div><div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">Distinction</div></td>
+                                <td><span class="attendance-pill high">96%</span></td>
+                                <td>
+                                    <div><span class="fee-badge PARTIAL">🟠 Due: ₹35,000</span></div>
+                                    <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">Paid: ₹50,000 / ₹85,000</div>
+                                </td>
+                                <td style="text-align: right;">
+                                    <div class="action-btn-group" style="justify-content: flex-end;">
+                                        <button class="action-icon-btn btn-view-details" type="button" title="View Full Profile">👁️</button>
+                                        <button class="action-icon-btn pay btn-record-payment" type="button" title="Record Payment">₹</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-id="3" data-name="Chandini Mohammad" data-email="mohammadchandini.23.cse@anits.edu.in" data-dept="Computer Science" data-roll="23CSE045" data-sem="Semester 6" data-gpa="9.55" data-att="98" data-status="Distinction" data-total="85000" data-paid="85000" data-due="0" data-fee="PAID">
+                                <td><input type="checkbox" class="macos-checkbox student-row-checkbox" value="3"></td>
+                                <td><span class="student-meta-roll">23CSE045</span></td>
+                                <td>
+                                    <div class="student-profile-cell">
+                                        <div class="student-avatar" style="background:#34c759;">CM</div>
+                                        <div>
+                                            <div class="student-meta-name">Chandini Mohammad</div>
+                                            <div class="student-meta-roll">mohammadchandini.23.cse@anits.edu.in</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div><span class="dept-badge">Computer Science</span></div><div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">Semester 6</div></td>
+                                <td><div><span class="gpa-pill honors">CGPA 9.55</span></div><div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">Distinction</div></td>
+                                <td><span class="attendance-pill high">98%</span></td>
+                                <td>
+                                    <div><span class="fee-badge PAID">🟢 Paid</span></div>
+                                    <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">All Fees Paid (₹0 Due)</div>
+                                </td>
+                                <td style="text-align: right;">
+                                    <div class="action-btn-group" style="justify-content: flex-end;">
+                                        <button class="action-icon-btn btn-view-details" type="button" title="View Full Profile">👁️</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-id="4" data-name="Sophia Rodriguez" data-email="sophia.r@campus.edu" data-dept="Data Science" data-roll="23DA035" data-sem="Semester 4" data-gpa="8.50" data-att="92" data-status="First Class" data-total="80000" data-paid="40000" data-due="40000" data-fee="PARTIAL">
+                                <td><input type="checkbox" class="macos-checkbox student-row-checkbox" value="4"></td>
+                                <td><span class="student-meta-roll">23DA035</span></td>
+                                <td>
+                                    <div class="student-profile-cell">
+                                        <div class="student-avatar" style="background:#ff9500;">SR</div>
+                                        <div>
+                                            <div class="student-meta-name">Sophia Rodriguez</div>
+                                            <div class="student-meta-roll">sophia.r@campus.edu</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div><span class="dept-badge">Data Science</span></div><div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">Semester 4</div></td>
+                                <td><div><span class="gpa-pill">CGPA 8.50</span></div><div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">First Class</div></td>
+                                <td><span class="attendance-pill high">92%</span></td>
+                                <td>
+                                    <div><span class="fee-badge PARTIAL">🟠 Due: ₹40,000</span></div>
+                                    <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">Paid: ₹40,000 / ₹80,000</div>
+                                </td>
+                                <td style="text-align: right;">
+                                    <div class="action-btn-group" style="justify-content: flex-end;">
+                                        <button class="action-icon-btn btn-view-details" type="button" title="View Full Profile">👁️</button>
+                                        <button class="action-icon-btn pay btn-record-payment" type="button" title="Record Payment">₹</button>
+                                    </div>
+                                </td>
+                            </tr>
+
+                            <tr data-id="5" data-name="Marcus Vance" data-email="marcus.v@campus.edu" data-dept="Information Technology" data-roll="23IN042" data-sem="Semester 4" data-gpa="8.40" data-att="88" data-status="First Class" data-total="85000" data-paid="85000" data-due="0" data-fee="PAID">
+                                <td><input type="checkbox" class="macos-checkbox student-row-checkbox" value="5"></td>
+                                <td><span class="student-meta-roll">23IN042</span></td>
+                                <td>
+                                    <div class="student-profile-cell">
+                                        <div class="student-avatar" style="background:#af52de;">MV</div>
+                                        <div>
+                                            <div class="student-meta-name">Marcus Vance</div>
+                                            <div class="student-meta-roll">marcus.v@campus.edu</div>
+                                        </div>
+                                    </div>
+                                </td>
+                                <td><div><span class="dept-badge">Information Technology</span></div><div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;">Semester 4</div></td>
+                                <td><div><span class="gpa-pill">CGPA 8.40</span></div><div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">First Class</div></td>
+                                <td><span class="attendance-pill high">88%</span></td>
+                                <td>
+                                    <div><span class="fee-badge PAID">🟢 Paid</span></div>
+                                    <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;">All Fees Paid (₹0 Due)</div>
+                                </td>
+                                <td style="text-align: right;">
+                                    <div class="action-btn-group" style="justify-content: flex-end;">
+                                        <button class="action-icon-btn btn-view-details" type="button" title="View Full Profile">👁️</button>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- ===================================================================
+                 SECTION 3: DEVOPS & KUBERNETES STATUS
+                 =================================================================== -->
+            <section class="view-section" id="section-settings">
+                <div class="content-card">
+                    <div class="content-card-header">
+                        <div>
+                            <h3 class="card-title">☸️ Kubernetes & DevOps Architecture</h3>
+                            <p class="card-subtitle">Active cloud-native deployment telemetry and cluster manifests</p>
+                        </div>
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 14px;">
+                        <div style="background: var(--bg-surface-secondary); padding: 14px; border-radius: var(--radius-card); border: 1px solid var(--border-subtle);">
+                            <div style="font-weight: 700; margin-bottom: 6px; color: var(--accent-blue);">☸️ Kubernetes (K8s) Cluster</div>
+                            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+                                • <strong>Namespace:</strong> student-management<br>
+                                • <strong>Pods:</strong> 2 App Replicas (HA) + 1 MySQL 8.4<br>
+                                • <strong>Storage:</strong> 2Gi PersistentVolumeClaim<br>
+                                • <strong>Services:</strong> LoadBalancer (8081) & ClusterIP (3306)
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg-surface-secondary); padding: 14px; border-radius: var(--radius-card); border: 1px solid var(--border-subtle);">
+                            <div style="font-weight: 700; margin-bottom: 6px; color: var(--accent-green);">🐳 Docker & Compose</div>
+                            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+                                • <strong>App Container:</strong> eclipse-temurin:21-jre<br>
+                                • <strong>Database:</strong> mysql:8.4 with Healthcheck<br>
+                                • <strong>Port Mapping:</strong> 8081:8081 & 3307:3306<br>
+                                • <strong>Configuration:</strong> docker-compose.yml
+                            </div>
+                        </div>
+
+                        <div style="background: var(--bg-surface-secondary); padding: 14px; border-radius: var(--radius-card); border: 1px solid var(--border-subtle);">
+                            <div style="font-weight: 700; margin-bottom: 6px; color: var(--accent-purple);">⚡ Vercel Deployment</div>
+                            <div style="font-size: 12px; color: var(--text-secondary); line-height: 1.6;">
+                                • <strong>Edge Hosting:</strong> Vercel Global Edge Network<br>
+                                • <strong>Config:</strong> vercel.json (cleanUrls, rewrites)<br>
+                                • <strong>Output Directory:</strong> public/<br>
+                                • <strong>CI/CD:</strong> GitHub Actions & Jenkins
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+</div>
+
+<!-- Modal: View Details -->
+<div class="modal-backdrop" id="modal-view-details">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">Student Profile Inspector</h3>
+            <button class="modal-close-btn" type="button" data-close-modal="modal-view-details">✕</button>
+        </div>
+        <div class="modal-body" style="text-align: center;">
+            <div class="student-avatar" id="detail-student-avatar" style="width: 56px; height: 56px; font-size: 20px; margin: 0 auto 12px auto;">ST</div>
+            <h3 id="detail-student-name" style="font-size: 18px; font-weight: 700; margin-bottom: 4px;">Student Name</h3>
+            <div id="detail-student-email" style="font-size: 12px; color: var(--text-tertiary); margin-bottom: 12px;">email@campus.edu</div>
+            <div style="display: inline-flex; gap: 6px;">
+                <span class="dept-badge" id="detail-student-dept">Computer Science</span>
+                <span class="student-meta-roll" id="detail-student-roll">23CSE001</span>
+                <span class="student-meta-roll" id="detail-student-id">#1</span>
+            </div>
+
+            <!-- Academic Profile Card -->
+            <div style="margin-top: 16px; text-align: left; background: var(--bg-surface-secondary); padding: 14px; border-radius: var(--radius-card);">
+                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px;">Academic Standing (10.0 CGPA Scale)</div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Program & Semester:</span>
+                    <b><span id="detail-student-sem">Semester 6</span></b>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Cumulative CGPA:</span>
+                    <b id="detail-student-gpa" style="color: var(--accent-purple);">9.55 / 10.0</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Attendance Rate:</span>
+                    <b id="detail-student-att" style="color: var(--accent-green);">98%</b>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-secondary);">Academic Classification:</span>
+                    <span class="trend-pill positive" id="detail-student-standing">Distinction</span>
+                </div>
+            </div>
+
+            <!-- Billing Profile Card -->
+            <div style="margin-top: 12px; text-align: left; background: var(--bg-surface-secondary); padding: 14px; border-radius: var(--radius-card);">
+                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px;">Tuition & Fee Ledger (₹ INR)</div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Total Tuition Fee:</span>
+                    <b id="detail-student-total-fee">₹85,000.00</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Amount Paid:</span>
+                    <b id="detail-student-paid-fee" style="color: var(--accent-green);">₹85,000.00</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Outstanding Due:</span>
+                    <b id="detail-student-due-fee" style="color: var(--accent-red);">₹0.00</b>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span style="color: var(--text-secondary);">Billing Status:</span>
+                    <span class="trend-pill positive" id="detail-student-fee-status">PAID</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-close-modal="modal-view-details">Close</button>
+            <button class="btn btn-success" type="button" id="detail-pay-btn" style="display:none;">Post Payment (₹)</button>
+        </div>
+    </div>
+</div>
+
+<!-- Modal: Record Payment -->
+<div class="modal-backdrop" id="modal-record-payment">
+    <div class="modal-card">
+        <div class="modal-header">
+            <h3 class="modal-title">Record Fee Payment (₹ INR)</h3>
+            <button class="modal-close-btn" type="button" data-close-modal="modal-record-payment">✕</button>
+        </div>
+        <div class="modal-body">
+            <div style="text-align: center; margin-bottom: 16px;">
+                <h4 id="payment-student-name" style="font-size: 16px; font-weight: 700; margin-bottom: 4px;">Student Name</h4>
+                <span style="font-size: 11px; color: var(--text-secondary);">Outstanding Due Balance:</span>
+                <div id="payment-student-due" style="font-size: 20px; font-weight: 700; color: var(--accent-red); margin-top: 2px;">₹35,000.00</div>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Payment Amount (₹)</label>
+                <input type="number" step="500" min="1" id="payment-amount-input" class="form-input" value="35000">
+            </div>
+        </div>
+        <div class="modal-footer">
+            <button class="btn btn-secondary" type="button" data-close-modal="modal-record-payment">Cancel</button>
+            <button class="btn btn-success" type="button" onclick="submitClientPayment()">Confirm Payment (₹)</button>
+        </div>
+    </div>
+</div>
+
+<!-- Script Initialization -->
+<script src="js/macos-dashboard.js"></script>
+<script>
+    // CSV Export simulation for static frontend
+    function exportStaticCsv() {
+        const rows = [
+            ["ID","Roll Number","Name","Email","Department","Semester","CGPA (10.0 Scale)","Attendance %","Total Fee (INR)","Paid Fee (INR)","Due Balance (INR)","Fee Status"],
+            ["1","23CSE001","Lakshmi Prasanna","lakshmi2132@gmail.com","Computer Science","Semester 6","8.85","94","85000","85000","0","PAID"],
+            ["2","23CSE015","Jahanvi Sharma","jahnavi343@gmail.com","Computer Science","Semester 6","9.20","96","85000","50000","35000","PARTIAL"],
+            ["3","23CSE045","Chandini Mohammad","mohammadchandini.23.cse@anits.edu.in","Computer Science","Semester 6","9.55","98","85000","85000","0","PAID"],
+            ["4","23DA035","Sophia Rodriguez","sophia.r@campus.edu","Data Science","Semester 4","8.50","92","80000","40000","40000","PARTIAL"],
+            ["5","23IN042","Marcus Vance","marcus.v@campus.edu","Information Technology","Semester 4","8.40","88","85000","85000","0","PAID"]
+        ];
+        let csvContent = "data:text/csv;charset=utf-8," + rows.map(e => e.join(",")).join("\n");
+        let encodedUri = encodeURI(csvContent);
+        let link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute("download", "student_records.csv");
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    }
+
+    function submitClientPayment() {
+        const amt = document.getElementById('payment-amount-input').value;
+        closeModal('modal-record-payment');
+        alert('Payment of ₹' + parseFloat(amt).toLocaleString('en-IN') + ' recorded successfully!');
+    }
+</script>
+</body>
+</html>
