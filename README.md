@@ -233,6 +233,28 @@ This repository is pre-configured with [`vercel.json`](file:///c:/Users/Chandini
 
 ---
 
+### Option 5: Continuous Integration & Delivery with Jenkins (CI/CD)
+
+The project includes an enterprise-grade declarative [`Jenkinsfile`](file:///c:/Users/Chandini%20Mohammad/OneDrive/Attachments/Documents/DevOps-Student-Management/demo/Jenkinsfile) automating the full DevOps pipeline:
+
+#### Pipeline Stages:
+1. **Stage 1 (Checkout SCM)**: Clones the latest commit from GitHub `main` branch.
+2. **Stage 2 (Maven Package)**: Executes `mvn clean package -DskipTests` to build the JAR.
+3. **Stage 3 (Docker Build)**: Builds container images tagged as `latest` and with build number `${BUILD_NUMBER}`.
+4. **Stage 4 (Kubernetes Rollout)**: Automatically deploys and updates pods via `kubectl apply -f k8s/` and waits for rollout completion.
+5. **Stage 5 (Smoke & Healthcheck)**: Probes `/api/stats` to verify real-time cluster readiness.
+
+#### Setting up the Pipeline in Jenkins:
+1. Open Jenkins (`http://localhost:8080`).
+2. Click **"New Item"** $\rightarrow$ select **"Pipeline"** $\rightarrow$ enter project name: `student-management-pipeline`.
+3. Under **Pipeline Definition**, select **"Pipeline script from SCM"**.
+4. Choose **SCM**: `Git` and set Repository URL to:
+   `https://github.com/Mohammad23chandini/Student-Management-DevOps.git`
+5. Set Script Path: `Jenkinsfile` (or `demo/Jenkinsfile`).
+6. Click **Save** and click **"Build Now"** to trigger the automated CI/CD pipeline!
+
+---
+
 ## 📡 REST API & Web Routes Reference
 
 | HTTP Method | Route | Description |
