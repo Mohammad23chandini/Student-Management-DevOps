@@ -159,6 +159,65 @@ graph TD
 
 ---
 
+### Option 3: Running with Kubernetes (Docker Desktop / Minikube / K8s Cluster)
+
+The project includes production-grade Kubernetes manifests located in the `k8s/` directory with persistent volume claims, secrets, config maps, multi-replica deployments, and health probes.
+
+#### Kubernetes Architecture Overview:
+* **Namespace (`k8s/00-namespace.yaml`)**: Isolated `student-management` namespace.
+* **Secrets (`k8s/01-mysql-secret.yaml`)**: Base64/Opaque storage for MySQL credentials (`MYSQL_ROOT_PASSWORD`).
+* **ConfigMap (`k8s/02-app-configmap.yaml`)**: Non-sensitive runtime variables (`DB_HOST`, `DB_PORT`, `SPRING_PROFILES_ACTIVE`).
+* **Persistent Volume Claim (`k8s/03-mysql-pvc.yaml`)**: 2Gi volume retaining database state across pod lifecycles.
+* **MySQL Deployment & Service (`k8s/04-*.yaml`, `k8s/05-*.yaml`)**: MySQL 8.4 pod with readiness/liveness health probes and a `ClusterIP` service (`mysql-service:3306`).
+* **Application Deployment & Service (`k8s/06-*.yaml`, `k8s/07-*.yaml`)**: 2-replica Spring Boot deployment with rolling updates, zero downtime, and a `LoadBalancer` / `NodePort` service mapping port 8081 and nodePort 30081.
+
+#### 1-Click Deployment:
+* **Using PowerShell (Windows)**:
+  ```powershell
+  .\deploy-k8s.ps1
+  ```
+* **Using Bash (Linux/macOS)**:
+  ```bash
+  chmod +x deploy-k8s.sh
+  ./deploy-k8s.sh
+  ```
+* **Using `kubectl` Directly**:
+  ```bash
+  # Apply all resources in order:
+  kubectl apply -f k8s/
+
+  # Or using Kustomize:
+  kubectl apply -k k8s/
+  ```
+
+#### Verify Cluster Status:
+```bash
+# Check all pods, deployments, and services in the namespace
+kubectl get all -n student-management
+
+# Stream live application logs across replicas
+kubectl logs -f -l app=student-management-app -n student-management
+
+# Scale application pods dynamically
+kubectl scale deployment app-deployment --replicas=3 -n student-management
+```
+
+#### Access the Application:
+* **Direct Web URL**: `http://localhost:8081` (LoadBalancer) or `http://localhost:30081` (NodePort)
+* **Port-Forwarding (Optional)**:
+  ```bash
+  kubectl port-forward svc/app-service 8081:8081 -n student-management
+  ```
+
+#### Teardown / Cleanup:
+```bash
+kubectl delete -f k8s/
+# or:
+.\undeploy-k8s.ps1
+```
+
+---
+
 ## 📡 REST API & Web Routes Reference
 
 | HTTP Method | Route | Description |
