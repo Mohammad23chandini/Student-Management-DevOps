@@ -39,7 +39,10 @@ public class StudentService {
     @Transactional
     public void normalizeExistingStudents() {
         List<Student> students = studentRepository.findAll();
-        if (students.isEmpty()) return;
+        if (students.isEmpty()) {
+            seedInitialStudents();
+            return;
+        }
 
         // Differentiated academic & fee profiles (10.0 scale GPA, Rupee fees)
         double[] sampleGpas = {9.55, 9.20, 8.85, 8.40, 7.90, 9.10, 8.65, 7.45, 8.95, 9.35, 8.15, 7.80};
@@ -101,6 +104,65 @@ public class StudentService {
         if (updatedAny) {
             logActivity("SYSTEM", "Synchronized existing student records with 10.0 CGPA scale and INR tuition fee structure", "System");
         }
+    }
+
+    private void seedInitialStudents() {
+        Student s1 = new Student("Chandini Mohammad", "chandini.mohammad@anits.edu.in", "Computer Science & Engineering");
+        s1.setRollNumber("23CSE045");
+        s1.setSemester("Semester 6");
+        s1.setGpa(9.55);
+        s1.setAttendance(98);
+        s1.setTotalFee(85000.0);
+        s1.setPaidFee(85000.0);
+        s1.setRegistrationDate(LocalDate.now().minusMonths(6));
+        s1.recalculateFeeStatus();
+        studentRepository.save(s1);
+
+        Student s2 = new Student("Jahanvi Sharma", "jahanvi.sharma@anits.edu.in", "Artificial Intelligence & Data Science");
+        s2.setRollNumber("23CSE015");
+        s2.setSemester("Semester 6");
+        s2.setGpa(9.20);
+        s2.setAttendance(96);
+        s2.setTotalFee(85000.0);
+        s2.setPaidFee(50000.0);
+        s2.setRegistrationDate(LocalDate.now().minusMonths(5));
+        s2.recalculateFeeStatus();
+        studentRepository.save(s2);
+
+        Student s3 = new Student("Lakshmi Devi", "lakshmi.devi@anits.edu.in", "Information Technology");
+        s3.setRollNumber("23CSE001");
+        s3.setSemester("Semester 6");
+        s3.setGpa(8.85);
+        s3.setAttendance(94);
+        s3.setTotalFee(85000.0);
+        s3.setPaidFee(85000.0);
+        s3.setRegistrationDate(LocalDate.now().minusMonths(4));
+        s3.recalculateFeeStatus();
+        studentRepository.save(s3);
+
+        Student s4 = new Student("Rahul Varma", "rahul.varma@anits.edu.in", "Electronics & Communication");
+        s4.setRollNumber("23ECE028");
+        s4.setSemester("Semester 4");
+        s4.setGpa(8.40);
+        s4.setAttendance(88);
+        s4.setTotalFee(75000.0);
+        s4.setPaidFee(75000.0);
+        s4.setRegistrationDate(LocalDate.now().minusMonths(3));
+        s4.recalculateFeeStatus();
+        studentRepository.save(s4);
+
+        Student s5 = new Student("Priya Patel", "priya.patel@anits.edu.in", "Computer Science & Engineering");
+        s5.setRollNumber("23CSE089");
+        s5.setSemester("Semester 8");
+        s5.setGpa(9.10);
+        s5.setAttendance(96);
+        s5.setTotalFee(85000.0);
+        s5.setPaidFee(40000.0);
+        s5.setRegistrationDate(LocalDate.now().minusMonths(2));
+        s5.recalculateFeeStatus();
+        studentRepository.save(s5);
+
+        logActivity("SYSTEM", "Seeded initial demonstration student cohort (10.0 CGPA scale, INR fee ledgers)", "System");
     }
 
     public List<Student> getAllStudents() {
