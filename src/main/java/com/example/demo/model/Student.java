@@ -73,6 +73,7 @@ public class Student {
 
     @PrePersist
     @PreUpdate
+    @PostLoad
     public void prePersistOrUpdate() {
         if (this.registrationDate == null) {
             this.registrationDate = LocalDate.now();
@@ -123,10 +124,11 @@ public class Student {
     public void recalculateFeeStatus() {
         double total = (totalFee != null) ? totalFee : 85000.0;
         double paid = (paidFee != null) ? paidFee : 0.0;
+        double due = Math.max(0.0, Math.round((total - paid) * 100.0) / 100.0);
 
-        if (paid >= total) {
+        if (due <= 0.0 || paid >= total) {
             this.feeStatus = "PAID";
-        } else if (paid > 0) {
+        } else if (paid > 0.0) {
             this.feeStatus = "PARTIAL";
         } else {
             if (feeDueDate != null && feeDueDate.isBefore(LocalDate.now())) {
@@ -231,7 +233,7 @@ public class Student {
     }
 
     public Double getPaidFee() {
-        return paidFee != null ? paidFee : 85000.0;
+        return paidFee != null ? paidFee : 0.0;
     }
 
     public void setPaidFee(Double paidFee) {
@@ -242,14 +244,18 @@ public class Student {
     public Double getDueFee() {
         double total = getTotalFee();
         double paid = getPaidFee();
-        return Math.max(0.0, total - paid);
+        return Math.max(0.0, Math.round((total - paid) * 100.0) / 100.0);
     }
 
     public String getFeeStatus() {
+        if (getDueFee() <= 0.0) {
+            this.feeStatus = "PAID";
+            return "PAID";
+        }
         if (feeStatus == null) {
             recalculateFeeStatus();
         }
-        return feeStatus;
+        return feeStatus != null ? feeStatus : "DUE";
     }
 
     public void setFeeStatus(String feeStatus) {

@@ -51,62 +51,51 @@ public class StudentService {
         boolean updatedAny = false;
         for (int i = 0; i < students.size(); i++) {
             Student s = students.get(i);
-            boolean needsUpdate = false;
 
-            // If GPA is in the old 4.0 scale or null, assign differentiated 10.0 scale GPA
+            // Differentiated 10.0 scale GPA & academic parameters
             if (s.getGpa() == null || s.getGpa() <= 4.0) {
                 s.setGpa(sampleGpas[i % sampleGpas.length]);
-                needsUpdate = true;
             }
-
-            // If attendance is null or old default
             if (s.getAttendance() == null) {
                 s.setAttendance(sampleAttendance[i % sampleAttendance.length]);
-                needsUpdate = true;
             }
-
-            // If semester is null
             if (s.getSemester() == null || s.getSemester().trim().isEmpty()) {
                 s.setSemester(sampleSemesters[i % sampleSemesters.length]);
-                needsUpdate = true;
             }
 
-            // If total fee is in dollars or null (less than 10,000)
-            if (s.getTotalFee() == null || s.getTotalFee() < 10000.0) {
+            // Assign realistic Indian university tuition structures
+            if (s.getName().toLowerCase().contains("chand") || s.getEmail().toLowerCase().contains("chandini")) {
+                s.setRollNumber("23CSE045");
+                s.setGpa(9.55);
+                s.setSemester("Semester 6");
+                s.setAttendance(98);
+                s.setTotalFee(85000.0);
+                s.setPaidFee(85000.0);
+            } else if (s.getName().toLowerCase().contains("lakshmi")) {
+                s.setRollNumber("23CSE001");
+                s.setGpa(8.85);
+                s.setSemester("Semester 6");
+                s.setAttendance(94);
+                s.setTotalFee(85000.0);
+                s.setPaidFee(85000.0);
+            } else if (s.getName().toLowerCase().contains("jahanvi")) {
+                s.setRollNumber("23CSE015");
+                s.setGpa(9.20);
+                s.setSemester("Semester 6");
+                s.setAttendance(96);
+                s.setTotalFee(85000.0);
+                s.setPaidFee(50000.0); // Partial fee paid (due: ₹35,000)
+            } else {
                 s.setTotalFee(sampleTotalFees[i % sampleTotalFees.length]);
                 s.setPaidFee(samplePaidFees[i % samplePaidFees.length]);
-                needsUpdate = true;
+                String deptCode = s.getCourse() != null && s.getCourse().length() >= 2 ? s.getCourse().substring(0, 2).toUpperCase() : "CS";
+                s.setRollNumber("23" + deptCode + String.format("%03d", (i + 1) * 7 % 100));
             }
 
-            // Roll number formatting
-            if (s.getRollNumber() == null || s.getRollNumber().startsWith("STU-")) {
-                if (s.getEmail().toLowerCase().contains("chandini") || s.getName().toLowerCase().contains("chand")) {
-                    s.setRollNumber("23CSE045");
-                    s.setGpa(9.55); // Top distinction for Chandini
-                    s.setSemester("Semester 6");
-                    s.setAttendance(98);
-                } else if (s.getName().toLowerCase().contains("lakshmi")) {
-                    s.setRollNumber("23CSE001");
-                    s.setGpa(8.85);
-                    s.setSemester("Semester 6");
-                    s.setAttendance(94);
-                } else if (s.getName().toLowerCase().contains("jahanvi")) {
-                    s.setRollNumber("23CSE015");
-                    s.setGpa(9.20);
-                    s.setSemester("Semester 6");
-                    s.setAttendance(96);
-                } else {
-                    String deptCode = s.getCourse() != null && s.getCourse().length() >= 2 ? s.getCourse().substring(0, 2).toUpperCase() : "CS";
-                    s.setRollNumber("23" + deptCode + String.format("%03d", (i + 1) * 7 % 100));
-                }
-                needsUpdate = true;
-            }
-
-            if (needsUpdate) {
-                s.recalculateFeeStatus();
-                studentRepository.save(s);
-                updatedAny = true;
-            }
+            // Strictly recalculate fee status: if due <= 0, it MUST be PAID (never DUE or RED)
+            s.recalculateFeeStatus();
+            studentRepository.save(s);
+            updatedAny = true;
         }
 
         if (updatedAny) {

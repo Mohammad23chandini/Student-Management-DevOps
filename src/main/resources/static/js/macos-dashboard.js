@@ -535,8 +535,10 @@ function initModals() {
             const total = parseFloat(row.getAttribute('data-total') || '85000').toLocaleString('en-IN');
             const paid = parseFloat(row.getAttribute('data-paid') || '85000').toLocaleString('en-IN');
             const due = parseFloat(row.getAttribute('data-due') || '0').toLocaleString('en-IN');
-            const rawDue = row.getAttribute('data-due') || '0';
-            const feeStatus = row.getAttribute('data-fee') || 'PAID';
+            const rawDue = parseFloat(row.getAttribute('data-due') || '0');
+            const isFullyPaid = rawDue <= 0.01;
+            const rawStatus = row.getAttribute('data-fee') || 'PAID';
+            const displayFeeStatus = isFullyPaid ? 'PAID' : (rawStatus === 'PAID' ? 'PARTIAL' : rawStatus);
 
             document.getElementById('detail-student-id').textContent = '#' + id;
             document.getElementById('detail-student-name').textContent = name;
@@ -549,8 +551,18 @@ function initModals() {
             document.getElementById('detail-student-standing').textContent = status;
             document.getElementById('detail-student-total-fee').textContent = '₹' + total;
             document.getElementById('detail-student-paid-fee').textContent = '₹' + paid;
-            document.getElementById('detail-student-due-fee').textContent = '₹' + due;
-            document.getElementById('detail-student-fee-status').textContent = feeStatus;
+
+            const dueEl = document.getElementById('detail-student-due-fee');
+            if (dueEl) {
+                dueEl.textContent = '₹' + (isFullyPaid ? '0.00' : due);
+                dueEl.style.color = isFullyPaid ? 'var(--accent-green)' : 'var(--accent-red)';
+            }
+
+            const statusEl = document.getElementById('detail-student-fee-status');
+            if (statusEl) {
+                statusEl.textContent = isFullyPaid ? 'PAID' : displayFeeStatus;
+                statusEl.className = 'trend-pill ' + (isFullyPaid ? 'positive' : (displayFeeStatus === 'PARTIAL' ? 'warning' : 'negative'));
+            }
 
             const avatar = document.getElementById('detail-student-avatar');
             if (avatar) {
@@ -560,10 +572,15 @@ function initModals() {
 
             const payBtn = document.getElementById('detail-pay-btn');
             if (payBtn) {
-                payBtn.onclick = () => {
-                    closeModal('modal-view-details');
-                    openPaymentModal(id, name, rawDue);
-                };
+                if (isFullyPaid) {
+                    payBtn.style.display = 'none';
+                } else {
+                    payBtn.style.display = 'inline-flex';
+                    payBtn.onclick = () => {
+                        closeModal('modal-view-details');
+                        openPaymentModal(id, name, rawDue);
+                    };
+                }
             }
 
             openModal('modal-view-details');

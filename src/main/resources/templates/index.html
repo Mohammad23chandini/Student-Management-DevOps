@@ -394,7 +394,7 @@
                                     th:data-total="${s.totalFee}"
                                     th:data-paid="${s.paidFee}"
                                     th:data-due="${s.dueFee}"
-                                    th:data-fee="${s.feeStatus}"
+                                    th:data-fee="${s.dueFee <= 0 ? 'PAID' : s.feeStatus}"
                                     th:data-date="${s.registrationDate}">
                                     <td><span class="student-meta-roll" th:text="${s.rollNumber}">23CSE001</span></td>
                                     <td>
@@ -414,9 +414,9 @@
                                         <span class="gpa-pill" th:classappend="${s.gpa >= 9.0 ? 'honors' : ''}" th:text="'CGPA ' + ${s.gpa}">CGPA 9.20</span>
                                     </td>
                                     <td>
-                                        <span class="fee-badge" th:classappend="${s.feeStatus}"
-                                              th:text="${s.feeStatus == 'PAID' ? '🟢 Paid' : (s.feeStatus == 'PARTIAL' ? '🟠 Due: ₹' + s.dueFee : '🔴 Due: ₹' + s.dueFee)}">
-                                            Fee Status
+                                        <span class="fee-badge" th:classappend="${s.dueFee <= 0 ? 'PAID' : s.feeStatus}"
+                                              th:text="${s.dueFee <= 0 or s.feeStatus == 'PAID' ? '🟢 Paid' : (s.feeStatus == 'PARTIAL' ? '🟠 Due: ₹' + #numbers.formatDecimal(s.dueFee, 1, 'COMMA', 0, 'POINT') : '🔴 Due: ₹' + #numbers.formatDecimal(s.dueFee, 1, 'COMMA', 0, 'POINT'))}">
+                                            🟢 Paid
                                         </span>
                                     </td>
                                     <td>
@@ -555,7 +555,7 @@
                                 th:data-total="${student.totalFee}"
                                 th:data-paid="${student.paidFee}"
                                 th:data-due="${student.dueFee}"
-                                th:data-fee="${student.feeStatus}"
+                                th:data-fee="${student.dueFee <= 0 ? 'PAID' : student.feeStatus}"
                                 th:data-date="${student.registrationDate}">
                                 
                                 <td>
@@ -598,13 +598,13 @@
 
                                 <td>
                                     <div>
-                                        <span class="fee-badge" th:classappend="${student.feeStatus}"
-                                              th:text="${student.feeStatus == 'PAID' ? '🟢 Paid' : (student.feeStatus == 'PARTIAL' ? '🟠 Due: ₹' + student.dueFee : '🔴 Due: ₹' + student.dueFee)}">
-                                            Fee Status
+                                        <span class="fee-badge" th:classappend="${student.dueFee <= 0 ? 'PAID' : student.feeStatus}"
+                                              th:text="${student.dueFee <= 0 or student.feeStatus == 'PAID' ? '🟢 Paid' : (student.feeStatus == 'PARTIAL' ? '🟠 Due: ₹' + #numbers.formatDecimal(student.dueFee, 1, 'COMMA', 0, 'POINT') : '🔴 Due: ₹' + #numbers.formatDecimal(student.dueFee, 1, 'COMMA', 0, 'POINT'))}">
+                                            🟢 Paid
                                         </span>
                                     </div>
                                     <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;"
-                                         th:text="'Paid: ₹' + ${student.paidFee} + ' / ₹' + ${student.totalFee}">
+                                         th:text="${student.dueFee <= 0 ? 'All Fees Paid (₹0 Due)' : 'Paid: ₹' + #numbers.formatDecimal(student.paidFee, 1, 'COMMA', 0, 'POINT') + ' / ₹' + #numbers.formatDecimal(student.totalFee, 1, 'COMMA', 0, 'POINT')}">
                                         Paid: ₹85000 / ₹85000
                                     </div>
                                 </td>
