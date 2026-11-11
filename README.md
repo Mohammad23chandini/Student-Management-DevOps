@@ -8,9 +8,9 @@
 [![Jenkins](https://img.shields.io/badge/Jenkins-CI%2FCD-D24939.svg?logo=jenkins&logoColor=white)](https://www.jenkins.io/)
 [![UI Design](https://img.shields.io/badge/UI%2FUX-macOS%20Inspired-000000.svg?logo=apple&logoColor=white)](https://developer.apple.com/design/human-interface-guidelines/)
 
-A commercial-grade **Student Management Dashboard** built with **Java 21**, **Spring Boot**, **MySQL 8.4**, and **DevOps automation** (Docker, Docker Compose, and Jenkins CI). 
+A commercial-grade **Student Information System (SIS) & Management Dashboard** built with **Java 21**, **Spring Boot**, **MySQL 8.4**, and **DevOps automation** (Docker, Docker Compose, and Jenkins CI). 
 
-The user interface follows the **Apple Human Interface Guidelines (macOS Sequoia / Sonoma)**, combining elegant glassmorphism, SF Pro typography, refined animations, and an authentic desktop experience with robust backend persistence and data management.
+The user interface follows the **Apple Human Interface Guidelines (macOS Sequoia / Sonoma)**, combining elegant glassmorphism, SF Pro typography, refined animations, and an authentic desktop experience with robust backend persistence, academic tracking, and financial tuition fee management.
 
 ---
 
@@ -23,42 +23,49 @@ The user interface follows the **Apple Human Interface Guidelines (macOS Sequoia
 - **Dark / Light Mode**: Seamless theme switcher with live icon changes and `localStorage` state persistence.
 - **Collapsible Sidebar**: Compact icon-only view or expanded full navigation menu with live database connection telemetry.
 
-### 📊 2. Dynamic Dashboard Overview
+### 📚 2. Academic Performance Tracking
+- **Roll Number / Student ID**: Official institutional identifier (e.g., `2026-CS-045`).
+- **Semester & Year Level**: Track student academic progression from `Semester 1` through `Semester 8`.
+- **Cumulative GPA & Standing**: Live GPA tracking (scale 0.00 – 4.00) with automatic honor recognitions (`Dean's List`, `Good Standing`, `Probation`).
+- **Attendance Monitoring**: Percentage tracker with color-coded alerts (`🟢 >= 85%`, `🟠 75%–84%`, `🔴 < 75% Low Attendance`).
+
+### 💳 3. Tuition & Fee Management
+- **Tuition Ledger**: Track Total Tuition Invoiced, Paid Amount, and Remaining Due Balances.
+- **Dynamic Fee Status**:
+  - `🟢 Paid` — Full tuition cleared
+  - `🟠 Partial` — Partial payment credited with outstanding balance
+  - `🔴 Due / Overdue` — Pending balance with deadline tracking
+- **One-Click Payment Posting**: In-place modal to post tuition payments with instant balance recalculation and persistent audit logging.
+- **Financial Collection KPIs**: Real-time campus fee realization rate progress bar and outstanding revenue analytics.
+
+### 📊 4. Dynamic Dashboard Overview
 - **Real-Time Database Statistics**:
-  - **Total Enrolled Students**: Live count from MySQL.
-  - **Academic Departments**: Distinct active programs count.
-  - **New This Month**: Number of students enrolled in the current calendar month.
-  - **System Node Health**: Real-time server and database engine status.
-- **Department Distribution Chart**: Interactive Chart.js Donut Chart with percentage breakdown and automatic SVG fallback for offline environments.
-- **Persistent Activity Audit Stream**: Real audit events recorded directly into MySQL (`activity_logs` table) upon student creation, update, deletion, bulk deletion, and CSV import.
-- **Recent Enrolments Preview**: Quick-access preview cards for the latest student entries.
+  - **Enrolled Students**: Live count from MySQL across academic departments.
+  - **Campus Academic GPA**: Average institutional GPA and attendance rate.
+  - **Tuition Fees Collected**: Total payments received and collection realization rate.
+  - **Outstanding Tuition Dues**: Real-time pending balance indicator.
+- **Department & Fee Breakdown Charts**: Interactive Chart.js Donut Charts with percentage distributions and automatic SVG fallback for offline environments.
+- **Persistent Activity Audit Stream**: Real audit events recorded directly into MySQL (`activity_logs` table) upon student creation, update, payment posting, deletion, and CSV import.
 
-### 🧑‍🎓 3. Comprehensive Student Management
-- **Modern Student Directory Table**:
+### 🧑‍🎓 5. Comprehensive Student Directory & Table
+- **Modern Data Table**:
   - Dynamic initials avatars styled with a curated Apple pastel color palette.
-  - Student legal name with monospace ID tag.
-  - Email address with clipboard copy button.
-  - Department badge pills.
-  - Formatted enrollment date tracking.
-- **Instant Live Search**: Client-side filtering across student name, email, and department in real time.
-- **Department Filter**: Dropdown dynamically populated with distinct courses from the database.
-- **Multi-Option Sorting**: Sort by Newest First, Oldest First, Name (A–Z), Name (Z–A), and Department.
-- **Configurable Pagination**: Page sizes (10, 25, 50, Show All) with responsive pagination pills.
+  - Roll number, full name, institutional email, department, semester.
+  - Color-coded GPA, attendance, and fee status badges.
+- **Instant Live Search**: Client-side filtering across student name, email, department, and roll number in real time.
+- **Multi-Level Filters**: Filter by Department, Semester (Sem 1 to 8), and Fee Status (Paid, Partial, Due, Overdue).
+- **Multi-Option Sorting**: Sort by Newest First, Oldest First, Name (A–Z), Highest GPA, and Highest Due Fee.
 - **Modal Sheets**:
-  - **Enroll Student Modal**: In-place macOS modal with real-time validation and department suggestions.
-  - **Edit Student Modal**: In-place pre-populated modal (while preserving the standalone `/students/edit/{id}` page).
-  - **Student Profile Inspector**: Detailed modal with full academic profile and quick actions.
-  - **Delete Confirmation Modal**: Custom macOS destructive warning sheet with confirmation before deletion.
-- **Multi-Select & Bulk Actions**: Checkbox selection for multiple students, counter badge (`"N students selected"`), and atomic bulk deletion.
+  - **Enroll Student Modal**: Comprehensive 2-column modal for identity, academic standing, and initial fee structure.
+  - **Edit Student Modal**: In-place modal to update all academic and billing metrics.
+  - **Student Profile Inspector**: Full dual-view card for academic standing and fee ledger.
+  - **Record Payment Modal**: Quick sheet to post fee payments with immediate receipt confirmation.
+  - **Delete Confirmation Modal**: Custom destructive warning sheet with confirmation.
+- **Multi-Select & Bulk Deletion**: Batch student row selection with confirmation-gated atomic deletion.
 
-### 📁 4. CSV Import & Export Utilities
-- **RFC 4180-Compliant CSV Export**: One-click download of the entire student directory with UTF-8 BOM encoding for complete compatibility with Microsoft Excel, Apple Numbers, and Google Sheets.
-- **Batch CSV Import**: File dropzone for batch uploading students (`Name, Email, Department, Registration Date`). Validates email format, prevents duplicate database entries, and generates detailed toast summaries.
-
-### 📝 5. Validation, Notifications & Print Reports
-- **Inline Validation**: Instant visual feedback (name min length >= 2, strict RFC email regex, required department).
-- **macOS Floating Toasts**: Auto-dismissing alerts for success, validation, and error messages.
-- **Printable Student Roster**: `@media print` formatted view that hides UI chrome, producing clean official student documents for physical print or PDF saving.
+### 📁 6. CSV Import & Export Utilities
+- **RFC 4180-Compliant CSV Export**: One-click download of the entire registry (ID, Roll Number, Name, Email, Department, Semester, GPA, Attendance, Total Fee, Paid Fee, Due Balance, Fee Status, Registration Date) with UTF-8 BOM encoding.
+- **Batch CSV Import**: File dropzone for batch uploading students with duplicate checking and format validation.
 
 ---
 
@@ -105,54 +112,7 @@ graph TD
 
 ---
 
-## 📂 Project Directory Structure
-
-```text
-demo/
-├── .env                                  # Environment secrets for Docker Compose
-├── .gitignore                            # Git ignore rules
-├── Dockerfile                            # Production Eclipse Temurin 21 JRE image
-├── docker-compose.yml                    # Multi-container orchestration (App + MySQL)
-├── pom.xml                               # Maven project definition and dependencies
-└── src/
-    ├── main/
-    │   ├── java/com/example/demo/
-    │   │   ├── DemoApplication.java      # Spring Boot application entrypoint
-    │   │   ├── controller/
-    │   │   │   └── StudentController.java# Web & API endpoints controller
-    │   │   ├── model/
-    │   │   │   ├── Student.java          # Student JPA entity
-    │   │   │   └── ActivityLog.java      # Activity audit log JPA entity
-    │   │   ├── repository/
-    │   │   │   ├── StudentRepository.java# Student database repository
-    │   │   │   └── ActivityLogRepository.java # Activity audit repository
-    │   │   └── service/
-    │   │       └── StudentService.java   # Business logic, CSV import/export, audit
-    │   └── resources/
-    │       ├── application.properties    # Local development database configuration
-    │       ├── application-docker.properties # Containerized database configuration
-    │       ├── static/
-    │       │   ├── css/
-    │       │   │   └── macos-dashboard.css # macOS Sequoia/Sonoma design system
-    │       │   └── js/
-    │       │       └── macos-dashboard.js  # Interactive UI & table controller
-    │       └── templates/
-    │           ├── index.html            # Primary macOS Dashboard view
-    │           └── edit.html             # Standalone student edit view
-    └── test/                             # Unit and integration test suites
-```
-
----
-
 ## 🚀 Getting Started
-
-### Prerequisites
-- [Java 21 JDK](https://www.oracle.com/java/technologies/downloads/#java21)
-- [Apache Maven 3.9+](https://maven.apache.org/)
-- [Docker Desktop](https://www.docker.com/products/docker-desktop/) (for containerized execution)
-- [Git](https://git-scm.com/)
-
----
 
 ### Option 1: Running with Docker Compose (Recommended)
 
@@ -172,28 +132,13 @@ demo/
    docker compose up -d --build
    ```
 
-4. **Verify running containers:**
-   ```bash
-   docker compose ps
-   ```
-   - `student-management-app`: Listening on `http://localhost:8081`
-   - `student-mysql`: Listening on `localhost:3307` (forwarded to internal 3306)
-
-5. **Open your browser and navigate to:**
-   ```text
-   http://localhost:8081
-   ```
+4. **Access the application at:** `http://localhost:8081`
 
 ---
 
 ### Option 2: Running Locally with Maven
 
-1. **Start a local MySQL 8.4 instance** and create the database:
-   ```sql
-   CREATE DATABASE student_management;
-   ```
-
-2. **Verify `src/main/resources/application.properties` credentials:**
+1. **Start a local MySQL 8.4 instance** and verify `src/main/resources/application.properties` credentials:
    ```properties
    spring.datasource.url=jdbc:mysql://localhost:3306/student_management
    spring.datasource.username=root
@@ -201,12 +146,12 @@ demo/
    server.port=8081
    ```
 
-3. **Compile and run the Spring Boot application:**
+2. **Compile and run the Spring Boot application:**
    ```bash
    mvn clean spring-boot:run
    ```
 
-4. **Access the application at:** `http://localhost:8081`
+3. **Access the application at:** `http://localhost:8081`
 
 ---
 
@@ -214,21 +159,22 @@ demo/
 
 | HTTP Method | Route | Description |
 | :--- | :--- | :--- |
-| `GET` | `/` | Dashboard Overview with KPIs, Charts & Activity Feed |
-| `GET` | `/students` | All Students Directory with Table, Search & Filters |
-| `POST` | `/students` | Enroll a new student record (with validation) |
-| `GET` | `/students/edit/{id}` | Standalone edit page for a specific student |
-| `POST` | `/students/update/{id}` | Update existing student record |
+| `GET` | `/` | Dashboard Overview with Academic KPIs, Financial Metrics & Activity Feed |
+| `GET` | `/students` | All Students Directory with Academic & Billing Table, Search & Filters |
+| `POST` | `/students` | Enroll a new student record (with academic standing & fee structure) |
+| `GET` | `/students/edit/{id}` | Standalone edit page for student academic and fee profile |
+| `POST` | `/students/update/{id}` | Update existing student academic and financial details |
+| `POST` | `/students/payment/{id}` | Record and post tuition fee payments |
 | `GET` | `/students/delete/{id}` | Delete a student record by ID |
 | `POST` | `/students/bulk-delete` | Batch delete selected student IDs |
-| `GET` | `/students/export` | Download full RFC 4180-compliant CSV export |
+| `GET` | `/students/export` | Download full registry CSV export (with GPA, Attendance, Fees) |
 | `POST` | `/students/import` | Upload & import student records from CSV file |
-| `GET` | `/analytics` | Academic department breakdown and analytics view |
+| `GET` | `/analytics` | Academic department breakdown and tuition realization analytics |
 | `GET` | `/reports` | CSV management and printable roster reports view |
 | `GET` | `/settings` | System tech stack runtime metadata & theme config |
-| `GET` | `/api/stats` | JSON endpoint returning live counts & department distribution |
+| `GET` | `/api/stats` | JSON endpoint returning live academic and financial metrics |
 | `GET` | `/api/students/{id}` | JSON endpoint returning individual student data |
-| `POST` | `/students/seed-demo` | Seeds realistic multi-department demonstration records |
+| `POST` | `/students/seed-demo` | Seeds realistic multi-department records with GPA and fee statuses |
 
 ---
 
@@ -236,74 +182,23 @@ demo/
 
 Hibernate automatically synchronizes the MySQL database schema using `spring.jpa.hibernate.ddl-auto=update`.
 
-### 1. `students` Table
+### `students` Table
 | Column | Type | Constraints | Description |
 | :--- | :--- | :--- | :--- |
 | `id` | `BIGINT` | PRIMARY KEY, AUTO_INCREMENT | Unique student identifier |
+| `roll_number` | `VARCHAR(255)` | NULL | Institutional Roll / ID number |
 | `name` | `VARCHAR(255)` | NOT NULL | Legal student full name |
 | `email` | `VARCHAR(255)` | NOT NULL, UNIQUE | Campus or personal email |
-| `course` | `VARCHAR(255)` | NOT NULL | Department / Course enrolled |
-| `registration_date` | `DATE` | NULL | Date of enrollment |
-
-### 2. `activity_logs` Table
-| Column | Type | Constraints | Description |
-| :--- | :--- | :--- | :--- |
-| `id` | `BIGINT` | PRIMARY KEY, AUTO_INCREMENT | Unique audit log identifier |
-| `action` | `VARCHAR(255)` | NOT NULL | Action type (`CREATE`, `UPDATE`, `DELETE`, `BULK_DELETE`, `IMPORT`) |
-| `description` | `VARCHAR(500)` | NOT NULL | Human-readable event description |
-| `student_name` | `VARCHAR(255)` | NULL | Associated student reference |
-| `timestamp` | `DATETIME(6)` | NOT NULL | Exact system timestamp of event |
-
----
-
-## 🔄 DevOps & CI/CD with Jenkins
-
-The project includes ready-to-run configurations for Jenkins CI pipelines:
-
-```groovy
-pipeline {
-    agent any
-
-    tools {
-        maven 'Maven-3.9.16'
-        jdk 'JDK-21'
-    }
-
-    stages {
-        stage('Checkout Source') {
-            steps {
-                git branch: 'main', url: 'https://github.com/Mohammad23chandini/Student-Management-DevOps.git'
-            }
-        }
-
-        stage('Build & Test') {
-            steps {
-                dir('demo') {
-                    sh 'mvn clean package -DskipTests'
-                }
-            }
-        }
-
-        stage('Docker Build & Deploy') {
-            steps {
-                dir('demo') {
-                    sh 'docker compose down'
-                    sh 'docker compose up -d --build'
-                }
-            }
-        }
-    }
-}
-```
-
----
-
-## 🛡️ Security & Best Practices
-
-- **Zero Hardcoded Secrets**: Database credentials in Docker Compose are injected via environment variables (`${MYSQL_ROOT_PASSWORD}`) through `.env`.
-- **Input Sanitization**: CSV parser strictly escapes quotes and prevents CSV injection vulnerabilities.
-- **SQL Injection Prevention**: Built entirely on Spring Data JPA parameterized queries and Criteria API.
-- **Transactional Integrity**: Bulk operations and imports execute in managed Spring `@Transactional` contexts to guarantee all-or-nothing atomicity.
+| `course` | `VARCHAR(255)` | NOT NULL | Department / Academic program |
+| `semester` | `VARCHAR(255)` | NULL | Current academic semester (`Semester 1`–`8`) |
+| `gpa` | `DOUBLE` | NULL | Cumulative Grade Point Average (0.00 – 4.00) |
+| `attendance` | `INTEGER` | NULL | Attendance percentage (0 – 100) |
+| `academic_status` | `VARCHAR(255)` | NULL | Standing (`Dean's List`, `Good Standing`, `Probation`) |
+| `total_fee` | `DOUBLE` | NULL | Total tuition fee invoiced |
+| `paid_fee` | `DOUBLE` | NULL | Total fee payments received |
+| `fee_status` | `VARCHAR(255)` | NULL | Status (`PAID`, `PARTIAL`, `DUE`, `OVERDUE`) |
+| `fee_due_date` | `DATE` | NULL | Tuition payment deadline |
+| `registration_date` | `DATE` | NULL | Initial enrollment date |
 
 ---
 

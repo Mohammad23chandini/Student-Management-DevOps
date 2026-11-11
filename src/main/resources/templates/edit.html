@@ -22,9 +22,9 @@
 </div>
 
 <!-- macOS Window Frame -->
-<div class="macos-window" style="max-width: 540px; min-height: auto;">
+<div class="macos-window" style="max-width: 600px; min-height: auto;">
 
-    <!-- macOS Titlebar -->
+    <!-- Titlebar -->
     <header class="window-header">
         <div class="window-traffic-lights">
             <a th:href="@{/students}" class="traffic-light close" title="Back to Students"></a>
@@ -38,122 +38,114 @@
                     <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
                 </svg>
             </div>
-            <span>Edit Student Profile</span>
+            <span>Edit Academic & Billing Profile</span>
         </div>
 
         <div class="window-header-actions">
-            <a th:href="@{/students}" class="btn btn-subtle btn-sm" style="font-size: 11px;">✕ Cancel</a>
+            <a th:href="@{/students}" class="btn btn-subtle btn-sm">✕ Cancel</a>
         </div>
     </header>
 
-    <!-- Window Body Form -->
-    <div style="padding: 28px 24px;">
-        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 24px; padding-bottom: 18px; border-bottom: 1px solid var(--border-subtle);">
-            <div class="student-avatar" style="width: 48px; height: 48px; font-size: 16px; background: linear-gradient(135deg, #0071e3, #47a6ff);"
+    <!-- Body Form -->
+    <div style="padding: 24px;">
+        <div style="display: flex; align-items: center; gap: 14px; margin-bottom: 20px; padding-bottom: 14px; border-bottom: 1px solid var(--border-subtle);">
+            <div class="student-avatar" style="width: 44px; height: 44px; font-size: 15px; background: linear-gradient(135deg, #0071e3, #47a6ff);"
                  th:text="${student.initials}">ST</div>
             <div>
-                <h2 style="font-size: 18px; font-weight: 650; color: var(--text-primary); margin-bottom: 2px;" th:text="${student.name}">Student Name</h2>
-                <div style="font-size: 12px; color: var(--text-tertiary);" th:text="'Student ID: #' + ${student.id}">Student ID: #1</div>
+                <h2 style="font-size: 17px; font-weight: 650; margin-bottom: 2px;" th:text="${student.name}">Student Name</h2>
+                <div style="font-size: 11px; color: var(--text-tertiary);" th:text="'Roll: ' + ${student.rollNumber} + ' | Database ID: #' + ${student.id}">Roll: 2026-001</div>
             </div>
         </div>
 
         <form th:action="@{/students/update/{id}(id=${student.id})}" method="post" class="needs-validation">
-            <div class="form-group">
-                <label class="form-label">Full Name <span class="required">*</span></label>
-                <input type="text" name="name" th:value="${student.name}" class="form-input" required autofocus>
-                <div class="form-helper">Student legal name.</div>
+            <div class="form-section-divider">Student Identity</div>
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label class="form-label">Full Name <span class="required">*</span></label>
+                    <input type="text" name="name" th:value="${student.name}" class="form-input" required autofocus>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email Address <span class="required">*</span></label>
+                    <input type="email" name="email" th:value="${student.email}" class="form-input" required>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Email Address <span class="required">*</span></label>
-                <input type="email" name="email" th:value="${student.email}" class="form-input" required>
-                <div class="form-helper">Campus or personal email address.</div>
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label class="form-label">Roll Number</label>
+                    <input type="text" name="rollNumber" th:value="${student.rollNumber}" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Department <span class="required">*</span></label>
+                    <input list="departments-list-edit" name="course" th:value="${student.course}" class="form-input" required>
+                    <datalist id="departments-list-edit">
+                        <option value="Computer Science">
+                        <option value="Information Technology">
+                        <option value="Data Science">
+                        <option value="Mechanical Engineering">
+                        <option value="Electrical Engineering">
+                        <option value="Business Administration">
+                    </datalist>
+                </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Department / Course <span class="required">*</span></label>
-                <input list="departments-list-edit" name="course" th:value="${student.course}" class="form-input" required>
-                <datalist id="departments-list-edit">
-                    <option value="Computer Science">
-                    <option value="Information Technology">
-                    <option value="Data Science">
-                    <option value="Electronics & Communication">
-                    <option value="Mechanical Engineering">
-                    <option value="Civil Engineering">
-                    <option value="Business Administration">
-                </datalist>
-                <div class="form-helper">Current academic program.</div>
+            <div class="form-section-divider">Academic Performance</div>
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label class="form-label">Semester</label>
+                    <select name="semester" class="form-input">
+                        <option th:selected="${student.semester == 'Semester 1'}" value="Semester 1">Semester 1</option>
+                        <option th:selected="${student.semester == 'Semester 2'}" value="Semester 2">Semester 2</option>
+                        <option th:selected="${student.semester == 'Semester 3'}" value="Semester 3">Semester 3</option>
+                        <option th:selected="${student.semester == 'Semester 4'}" value="Semester 4">Semester 4</option>
+                        <option th:selected="${student.semester == 'Semester 5'}" value="Semester 5">Semester 5</option>
+                        <option th:selected="${student.semester == 'Semester 6'}" value="Semester 6">Semester 6</option>
+                        <option th:selected="${student.semester == 'Semester 7'}" value="Semester 7">Semester 7</option>
+                        <option th:selected="${student.semester == 'Semester 8'}" value="Semester 8">Semester 8</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Cumulative GPA</label>
+                    <input type="number" step="0.01" min="0" max="4.0" name="gpa" th:value="${student.gpa}" class="form-input">
+                </div>
             </div>
 
-            <div class="form-group">
-                <label class="form-label">Registration Date</label>
-                <input type="date" name="registrationDate" th:value="${student.registrationDate}" class="form-input">
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label class="form-label">Attendance (%)</label>
+                    <input type="number" min="0" max="100" name="attendance" th:value="${student.attendance}" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Registration Date</label>
+                    <input type="date" name="registrationDate" th:value="${student.registrationDate}" class="form-input">
+                </div>
             </div>
 
-            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 28px; padding-top: 18px; border-top: 1px solid var(--border-subtle);">
-                <a th:href="@{/students}" class="btn btn-secondary">
-                    <span>Cancel</span>
-                </a>
+            <div class="form-section-divider">Tuition & Billing</div>
+            <div class="form-grid-2">
+                <div class="form-group">
+                    <label class="form-label">Total Tuition Fee ($)</label>
+                    <input type="number" step="50" min="0" name="totalFee" th:value="${student.totalFee}" class="form-input">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Paid Amount ($)</label>
+                    <input type="number" step="50" min="0" name="paidFee" th:value="${student.paidFee}" class="form-input">
+                </div>
+            </div>
 
-                <div style="display: flex; gap: 10px;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-top: 24px; padding-top: 16px; border-top: 1px solid var(--border-subtle);">
+                <a th:href="@{/students}" class="btn btn-secondary">Cancel</a>
+                <div style="display: flex; gap: 8px;">
                     <a th:href="@{/students/delete/{id}(id=${student.id})}"
-                       onclick="return confirm('Are you sure you want to permanently delete this student record?')"
-                       class="btn btn-danger btn-sm" style="padding: 7px 12px;">
-                        <span>Delete</span>
-                    </a>
-
-                    <button type="submit" class="btn btn-primary">
-                        <span>Save Changes</span>
-                    </button>
+                       onclick="return confirm('Permanently delete this student record?')"
+                       class="btn btn-danger btn-sm" style="padding: 7px 12px;">Delete</a>
+                    <button type="submit" class="btn btn-primary">Save Changes</button>
                 </div>
             </div>
         </form>
     </div>
 
 </div>
-
-<!-- Real-time form validation script -->
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const form = document.querySelector('form.needs-validation');
-        if (!form) return;
-
-        const nameInput = form.querySelector('[name="name"]');
-        const emailInput = form.querySelector('[name="email"]');
-        const courseInput = form.querySelector('[name="course"]');
-
-        const validateName = () => {
-            const valid = nameInput.value.trim().length >= 2;
-            nameInput.style.borderColor = valid ? 'var(--accent-green)' : 'var(--accent-red)';
-            return valid;
-        };
-
-        const validateEmail = () => {
-            const val = emailInput.value.trim();
-            const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,63}$/;
-            const valid = emailRegex.test(val);
-            emailInput.style.borderColor = valid ? 'var(--accent-green)' : 'var(--accent-red)';
-            return valid;
-        };
-
-        const validateCourse = () => {
-            const valid = courseInput.value.trim().length > 0;
-            courseInput.style.borderColor = valid ? 'var(--accent-green)' : 'var(--accent-red)';
-            return valid;
-        };
-
-        nameInput.addEventListener('input', validateName);
-        emailInput.addEventListener('input', validateEmail);
-        courseInput.addEventListener('change', validateCourse);
-
-        form.addEventListener('submit', (e) => {
-            if (!validateName() || !validateEmail() || !validateCourse()) {
-                e.preventDefault();
-                alert('Please ensure all required fields are correctly completed.');
-            }
-        });
-    });
-</script>
 
 </body>
 </html>

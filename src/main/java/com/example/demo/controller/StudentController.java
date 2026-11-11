@@ -45,6 +45,15 @@ public class StudentController {
         model.addAttribute("departmentDistribution", departmentDistribution);
         model.addAttribute("recentActivities", studentService.getRecentActivities());
         model.addAttribute("recentStudents", studentService.getRecentlyAddedStudents(5));
+
+        // Academic & Fee KPIs
+        model.addAttribute("totalFeesCollected", studentService.getTotalFeesCollected());
+        model.addAttribute("totalFeesPending", studentService.getTotalFeesPending());
+        model.addAttribute("collectionRate", studentService.getCollectionRate());
+        model.addAttribute("avgGpa", studentService.getAverageGpa());
+        model.addAttribute("avgAttendance", studentService.getAverageAttendance());
+        model.addAttribute("feeStatusDistribution", studentService.getFeeStatusDistribution());
+
         model.addAttribute("activeSection", activeSection != null ? activeSection : "overview");
         model.addAttribute("currentDate", LocalDate.now().format(DateTimeFormatter.ofPattern("EEEE, MMMM d, yyyy")));
     }
@@ -83,6 +92,13 @@ public class StudentController {
     public String addStudent(@RequestParam String name,
                              @RequestParam String email,
                              @RequestParam String course,
+                             @RequestParam(required = false) String rollNumber,
+                             @RequestParam(required = false) String semester,
+                             @RequestParam(required = false) Double gpa,
+                             @RequestParam(required = false) Integer attendance,
+                             @RequestParam(required = false) Double totalFee,
+                             @RequestParam(required = false) Double paidFee,
+                             @RequestParam(required = false) String feeDueDate,
                              @RequestParam(required = false) String registrationDate,
                              RedirectAttributes redirectAttributes) {
 
@@ -115,14 +131,29 @@ public class StudentController {
             try {
                 regDate = LocalDate.parse(registrationDate.trim());
             } catch (Exception ignored) {
-                regDate = LocalDate.now();
+            }
+        }
+
+        LocalDate dueDate = LocalDate.now().plusMonths(2);
+        if (feeDueDate != null && !feeDueDate.trim().isEmpty()) {
+            try {
+                dueDate = LocalDate.parse(feeDueDate.trim());
+            } catch (Exception ignored) {
             }
         }
 
         Student student = new Student(trimmedName, trimmedEmail, trimmedCourse, regDate);
+        if (rollNumber != null && !rollNumber.trim().isEmpty()) student.setRollNumber(rollNumber.trim());
+        if (semester != null && !semester.trim().isEmpty()) student.setSemester(semester.trim());
+        if (gpa != null) student.setGpa(gpa);
+        if (attendance != null) student.setAttendance(attendance);
+        if (totalFee != null) student.setTotalFee(totalFee);
+        if (paidFee != null) student.setPaidFee(paidFee);
+        student.setFeeDueDate(dueDate);
+
         studentService.saveStudent(student);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Student '" + trimmedName + "' enrolled successfully!");
+        redirectAttributes.addFlashAttribute("successMessage", "Student '" + trimmedName + "' enrolled successfully with academic & fee profile!");
         return "redirect:/students";
     }
 
@@ -145,6 +176,13 @@ public class StudentController {
                                 @RequestParam String name,
                                 @RequestParam String email,
                                 @RequestParam String course,
+                                @RequestParam(required = false) String rollNumber,
+                                @RequestParam(required = false) String semester,
+                                @RequestParam(required = false) Double gpa,
+                                @RequestParam(required = false) Integer attendance,
+                                @RequestParam(required = false) Double totalFee,
+                                @RequestParam(required = false) Double paidFee,
+                                @RequestParam(required = false) String feeDueDate,
                                 @RequestParam(required = false) String registrationDate,
                                 RedirectAttributes redirectAttributes) {
 
@@ -180,10 +218,46 @@ public class StudentController {
             }
         }
 
-        Student updatedStudent = new Student(trimmedName, trimmedEmail, trimmedCourse, regDate);
-        studentService.updateStudent(id, updatedStudent);
+        LocalDate dueDate = null;
+        if (feeDueDate != null && !feeDueDate.trim().isEmpty()) {
+            try {
+                dueDate = LocalDate.parse(feeDueDate.trim());
+            } catch (Exception ignored) {
+            }
+        }
+
+        Student updated = new Student(trimmedName, trimmedEmail, trimmedCourse, regDate);
+        if (rollNumber != null) updated.setRollNumber(rollNumber.trim());
+        if (semester != null) updated.setSemester(semester.trim());
+        if (gpa != null) updated.setGpa(gpa);
+        if (attendance != null) updated.setAttendance(attendance);
+        if (totalFee != null) updated.setTotalFee(totalFee);
+        if (paidFee != null) updated.setPaidFee(paidFee);
+        if (dueDate != null) updated.setFeeDueDate(dueDate);
+
+        studentService.updateStudent(id, updated);
 
         redirectAttributes.addFlashAttribute("successMessage", "Student record for '" + trimmedName + "' updated successfully.");
+        return "redirect:/students";
+    }
+
+    @PostMapping("/students/payment/{id}")
+    public String recordPayment(@PathVariable Long id,
+                                @RequestParam Double paymentAmount,
+                                RedirectAttributes redirectAttributes) {
+        if (paymentAmount == null || paymentAmount <= 0) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Please provide a valid payment amount greater than $0.");
+            return "redirect:/students";
+        }
+
+        Student student = studentService.getStudentById(id);
+        if (student == null) {
+            redirectAttributes.addFlashAttribute("errorMessage", "Student record not found.");
+            return "redirect:/students";
+        }
+
+        studentService.recordPayment(id, paymentAmount);
+        redirectAttributes.addFlashAttribute("successMessage", String.format("Payment of $%.2f successfully credited to %s.", paymentAmount, student.getName()));
         return "redirect:/students";
     }
 
@@ -216,7 +290,6 @@ public class StudentController {
         response.setHeader("Content-Disposition", "attachment; filename=\"" + filename + "\"");
 
         try (Writer writer = new OutputStreamWriter(response.getOutputStream(), StandardCharsets.UTF_8)) {
-            // Write BOM for Excel compatibility
             writer.write('\ufeff');
             studentService.exportStudentsToCsv(writer);
         }
@@ -270,32 +343,49 @@ public class StudentController {
         stats.put("totalDepartments", studentService.getDepartmentDistribution().size());
         stats.put("newThisMonth", studentService.getNewStudentsThisMonthCount());
         stats.put("departmentDistribution", studentService.getDepartmentDistribution());
+        stats.put("totalFeesCollected", studentService.getTotalFeesCollected());
+        stats.put("totalFeesPending", studentService.getTotalFeesPending());
+        stats.put("collectionRate", studentService.getCollectionRate());
+        stats.put("averageGpa", studentService.getAverageGpa());
+        stats.put("averageAttendance", studentService.getAverageAttendance());
+        stats.put("feeStatusDistribution", studentService.getFeeStatusDistribution());
         return ResponseEntity.ok(stats);
     }
 
     @PostMapping("/students/seed-demo")
     public String seedDemoStudents(RedirectAttributes redirectAttributes) {
-        String[][] demoData = {
-                {"Alexandre Chen", "alex.chen@campus.edu", "Computer Science"},
-                {"Sophia Rodriguez", "sophia.r@campus.edu", "Data Science"},
-                {"Marcus Vance", "marcus.vance@campus.edu", "Information Technology"},
-                {"Elena Rostova", "elena.rostova@campus.edu", "Mechanical Engineering"},
-                {"Devon Miller", "d.miller@campus.edu", "Electrical Engineering"},
-                {"Aisha Patel", "aisha.patel@campus.edu", "Business Administration"},
-                {"Liam O'Connor", "liam.oc@campus.edu", "Computer Science"},
-                {"Maya Lin", "maya.lin@campus.edu", "Data Science"}
+        Object[][] demoData = {
+                {"2026-CS-101", "Alexandre Chen", "alex.chen@campus.edu", "Computer Science", "Semester 6", 3.92, 96, 5000.0, 5000.0},
+                {"2026-DS-102", "Sophia Rodriguez", "sophia.r@campus.edu", "Data Science", "Semester 4", 3.88, 94, 5200.0, 3500.0},
+                {"2026-IT-103", "Marcus Vance", "marcus.vance@campus.edu", "Information Technology", "Semester 2", 3.45, 88, 4800.0, 4800.0},
+                {"2026-ME-104", "Elena Rostova", "elena.rostova@campus.edu", "Mechanical Engineering", "Semester 8", 3.75, 91, 5500.0, 2000.0},
+                {"2026-EE-105", "Devon Miller", "d.miller@campus.edu", "Electrical Engineering", "Semester 5", 2.85, 74, 5000.0, 1500.0},
+                {"2026-BA-106", "Aisha Patel", "aisha.patel@campus.edu", "Business Administration", "Semester 3", 3.95, 98, 4500.0, 4500.0},
+                {"2026-CS-107", "Liam O'Connor", "liam.oc@campus.edu", "Computer Science", "Semester 1", 3.20, 85, 5000.0, 0.0},
+                {"2026-DS-108", "Maya Lin", "maya.lin@campus.edu", "Data Science", "Semester 7", 3.82, 93, 5200.0, 5200.0}
         };
 
         int count = 0;
-        for (String[] row : demoData) {
-            if (!studentService.isEmailTaken(row[1])) {
-                Student s = new Student(row[0], row[1], row[2], LocalDate.now().minusDays((long) (Math.random() * 60)));
+        for (Object[] row : demoData) {
+            String email = (String) row[2];
+            if (!studentService.isEmailTaken(email)) {
+                Student s = new Student((String) row[1], email, (String) row[3],
+                        LocalDate.now().minusDays((long) (Math.random() * 90)));
+                s.setRollNumber((String) row[0]);
+                s.setSemester((String) row[4]);
+                s.setGpa((Double) row[5]);
+                s.setAttendance((Integer) row[6]);
+                s.setTotalFee((Double) row[7]);
+                s.setPaidFee((Double) row[8]);
+                s.setFeeDueDate(LocalDate.now().plusDays((long) (Math.random() * 30 - 10)));
+                s.recalculateFeeStatus();
+
                 studentService.saveStudent(s);
                 count++;
             }
         }
 
-        redirectAttributes.addFlashAttribute("successMessage", "Seeded " + count + " demonstration student records across departments.");
+        redirectAttributes.addFlashAttribute("successMessage", "Seeded " + count + " academic & billing records across programs.");
         return "redirect:/students";
     }
 }

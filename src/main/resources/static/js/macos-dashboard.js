@@ -1,7 +1,7 @@
 /**
  * macOS Dashboard Interactive Controller
- * Handles Navigation, Table Filtering, Multi-Selection, Sorting, Pagination,
- * Modals, Real-time Validation, Charts, and System Settings.
+ * Supports Academic Performance, Tuition Fees, Navigation, Table Filtering,
+ * Multi-Selection, Sorting, Pagination, Modals, Real-time Validation & Charts.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -12,6 +12,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initWindowControls();
     initStudentTable();
     initModals();
+    initPaymentModal();
     initFormValidation();
     initCharts();
     initToasts();
@@ -34,7 +35,7 @@ function initClock() {
 }
 
 /* ==========================================================================
-   2. Theme Switcher (macOS Light / Dark Mode)
+   2. Theme Switcher (Light / Dark)
    ========================================================================== */
 function initTheme() {
     const savedTheme = localStorage.getItem('macos-theme') || 'light';
@@ -76,7 +77,7 @@ function applyTheme(theme) {
 }
 
 /* ==========================================================================
-   3. Window Controls (Traffic Lights)
+   3. Window Controls
    ========================================================================== */
 function initWindowControls() {
     const windowEl = document.querySelector('.macos-window');
@@ -109,7 +110,7 @@ function initWindowControls() {
 }
 
 /* ==========================================================================
-   4. Sidebar Toggle & Responsive
+   4. Sidebar
    ========================================================================== */
 function initSidebar() {
     const sidebar = document.querySelector('.macos-sidebar');
@@ -133,8 +134,8 @@ function initNavigation() {
 
     const titles = {
         overview: { title: 'Dashboard Overview', desc: 'Real-time academic metrics & system statistics' },
-        students: { title: 'Student Management', desc: 'Manage directory, enrollment records and department profiles' },
-        analytics: { title: 'Analytics & Insights', desc: 'Departmental distribution and student enrollment metrics' },
+        students: { title: 'Student Management', desc: 'Academic records, enrollment directory and fee balances' },
+        analytics: { title: 'Analytics & Insights', desc: 'Departmental performance, GPA and financial metrics' },
         reports: { title: 'Reports & Data Export', desc: 'Generate CSV archives and printable student rosters' },
         settings: { title: 'System Settings', desc: 'Application configuration, database connection and preferences' }
     };
@@ -164,7 +165,6 @@ function initNavigation() {
             headerDesc.textContent = titles[targetKey].desc;
         }
 
-        // Trigger chart resize if navigating to analytics or overview
         if (targetKey === 'overview' || targetKey === 'analytics') {
             setTimeout(resizeCharts, 50);
         }
@@ -186,22 +186,11 @@ function initNavigation() {
         });
     });
 
-    // Handle hash on initial load
     const hash = window.location.hash.replace('#', '');
     if (hash && document.getElementById('section-' + hash)) {
         switchSection(hash);
-    } else {
-        const initialActive = document.querySelector('.view-section.active');
-        if (initialActive) {
-            const initialKey = initialActive.id.replace('section-', '');
-            if (titles[initialKey] && headerTitle && headerDesc) {
-                headerTitle.textContent = titles[initialKey].title;
-                headerDesc.textContent = titles[initialKey].desc;
-            }
-        }
     }
 
-    // Quick action triggers
     document.querySelectorAll('[data-switch-to]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -213,7 +202,7 @@ function initNavigation() {
 }
 
 /* ==========================================================================
-   6. Student Data Table (Search, Filter, Sort, Pagination, Multi-Select)
+   6. Student Data Table (Search, Filters, Sort, Pagination, Multi-Select)
    ========================================================================== */
 function initStudentTable() {
     const table = document.getElementById('students-data-table');
@@ -224,6 +213,8 @@ function initStudentTable() {
 
     const searchInput = document.getElementById('table-search-input');
     const deptFilter = document.getElementById('table-dept-filter');
+    const feeFilter = document.getElementById('table-fee-filter');
+    const semFilter = document.getElementById('table-sem-filter');
     const sortSelect = document.getElementById('table-sort-select');
     const pageSizeSelect = document.getElementById('page-size-select');
     const paginationControls = document.getElementById('pagination-controls');
@@ -239,7 +230,6 @@ function initStudentTable() {
     let pageSize = 10;
     let filteredRows = [...allRows];
 
-    // Pastel Avatar Palette for macOS look
     const avatarGradients = [
         'linear-gradient(135deg, #0071e3, #47a6ff)',
         'linear-gradient(135deg, #af52de, #5856d6)',
@@ -259,16 +249,23 @@ function initStudentTable() {
     function applyFilters() {
         const query = (searchInput ? searchInput.value : '').toLowerCase().trim();
         const selectedDept = (deptFilter ? deptFilter.value : 'ALL').toUpperCase();
+        const selectedFee = (feeFilter ? feeFilter.value : 'ALL').toUpperCase();
+        const selectedSem = (semFilter ? semFilter.value : 'ALL').toUpperCase();
 
         filteredRows = allRows.filter(row => {
             const name = (row.getAttribute('data-name') || '').toLowerCase();
             const email = (row.getAttribute('data-email') || '').toLowerCase();
             const dept = (row.getAttribute('data-dept') || '').toUpperCase();
+            const roll = (row.getAttribute('data-roll') || '').toLowerCase();
+            const fee = (row.getAttribute('data-fee') || '').toUpperCase();
+            const sem = (row.getAttribute('data-sem') || '').toUpperCase();
 
-            const matchesQuery = !query || name.includes(query) || email.includes(query) || dept.toLowerCase().includes(query);
+            const matchesQuery = !query || name.includes(query) || email.includes(query) || dept.toLowerCase().includes(query) || roll.includes(query);
             const matchesDept = selectedDept === 'ALL' || dept === selectedDept;
+            const matchesFee = selectedFee === 'ALL' || fee === selectedFee;
+            const matchesSem = selectedSem === 'ALL' || sem === selectedSem;
 
-            return matchesQuery && matchesDept;
+            return matchesQuery && matchesDept && matchesFee && matchesSem;
         });
 
         applySorting();
@@ -285,13 +282,16 @@ function initStudentTable() {
             const idB = parseInt(b.getAttribute('data-id') || '0', 10);
             const nameA = (a.getAttribute('data-name') || '').toLowerCase();
             const nameB = (b.getAttribute('data-name') || '').toLowerCase();
-            const deptA = (a.getAttribute('data-dept') || '').toLowerCase();
-            const deptB = (b.getAttribute('data-dept') || '').toLowerCase();
+            const gpaA = parseFloat(a.getAttribute('data-gpa') || '0');
+            const gpaB = parseFloat(b.getAttribute('data-gpa') || '0');
+            const dueA = parseFloat(a.getAttribute('data-due') || '0');
+            const dueB = parseFloat(b.getAttribute('data-due') || '0');
 
             switch (sortVal) {
                 case 'name_asc': return nameA.localeCompare(nameB);
                 case 'name_desc': return nameB.localeCompare(nameA);
-                case 'dept_asc': return deptA.localeCompare(deptB);
+                case 'gpa_desc': return gpaB - gpaA;
+                case 'due_desc': return dueB - dueA;
                 case 'id_asc': return idA - idB;
                 case 'id_desc':
                 default: return idB - idA;
@@ -317,7 +317,6 @@ function initStudentTable() {
             }
         }
 
-        // Update Info
         if (paginationInfo) {
             if (totalItems === 0) {
                 paginationInfo.textContent = 'No matching student records found';
@@ -326,7 +325,6 @@ function initStudentTable() {
             }
         }
 
-        // Render Pagination Controls
         if (paginationControls) {
             paginationControls.innerHTML = '';
 
@@ -401,14 +399,10 @@ function initStudentTable() {
         }
     }
 
-    // Event Listeners for Filters
-    if (searchInput) {
-        searchInput.addEventListener('input', applyFilters);
-    }
-
-    if (deptFilter) {
-        deptFilter.addEventListener('change', applyFilters);
-    }
+    if (searchInput) searchInput.addEventListener('input', applyFilters);
+    if (deptFilter) deptFilter.addEventListener('change', applyFilters);
+    if (feeFilter) feeFilter.addEventListener('change', applyFilters);
+    if (semFilter) semFilter.addEventListener('change', applyFilters);
 
     if (sortSelect) {
         sortSelect.addEventListener('change', () => {
@@ -425,7 +419,6 @@ function initStudentTable() {
         });
     }
 
-    // Checkbox Multi-selection
     if (selectAllCheckbox) {
         selectAllCheckbox.addEventListener('change', (e) => {
             const isChecked = e.target.checked;
@@ -451,7 +444,6 @@ function initStudentTable() {
         }
     });
 
-    // Deselect All Button
     const deselectBtn = document.getElementById('bulk-deselect-btn');
     if (deselectBtn) {
         deselectBtn.addEventListener('click', () => {
@@ -463,13 +455,11 @@ function initStudentTable() {
         });
     }
 
-    // Bulk Delete Action
     const bulkDeleteTrigger = document.getElementById('bulk-delete-trigger-btn');
     if (bulkDeleteTrigger) {
         bulkDeleteTrigger.addEventListener('click', () => {
             const selected = Array.from(tbody.querySelectorAll('.student-row-checkbox:checked')).map(cb => cb.value);
             if (selected.length === 0) return;
-
             document.getElementById('bulk-delete-modal-count').textContent = selected.length;
             openModal('modal-bulk-delete');
         });
@@ -491,7 +481,6 @@ function initStudentTable() {
         });
     }
 
-    // Initial table render
     applyFilters();
 }
 
@@ -499,12 +488,9 @@ function initStudentTable() {
    7. Modals & Sheets Controller
    ========================================================================== */
 function initModals() {
-    // Backdrop and Close Buttons
     document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
         backdrop.addEventListener('click', (e) => {
-            if (e.target === backdrop) {
-                closeModal(backdrop.id);
-            }
+            if (e.target === backdrop) closeModal(backdrop.id);
         });
     });
 
@@ -515,7 +501,6 @@ function initModals() {
         });
     });
 
-    // ESC key closes active modal
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
             document.querySelectorAll('.modal-backdrop.active').forEach(modal => {
@@ -524,7 +509,6 @@ function initModals() {
         }
     });
 
-    // Trigger buttons
     document.querySelectorAll('[data-open-modal]').forEach(btn => {
         btn.addEventListener('click', (e) => {
             e.preventDefault();
@@ -533,7 +517,7 @@ function initModals() {
         });
     });
 
-    // View Details Modal Handler
+    // View Details Modal
     document.querySelectorAll('.btn-view-details').forEach(btn => {
         btn.addEventListener('click', () => {
             const row = btn.closest('tr');
@@ -543,12 +527,30 @@ function initModals() {
             const name = row.getAttribute('data-name');
             const email = row.getAttribute('data-email');
             const dept = row.getAttribute('data-dept');
-            const date = row.getAttribute('data-date') || 'Active Enrollment';
+            const roll = row.getAttribute('data-roll') || 'N/A';
+            const sem = row.getAttribute('data-sem') || 'Semester 1';
+            const gpa = row.getAttribute('data-gpa') || '3.50';
+            const att = row.getAttribute('data-att') || '90';
+            const status = row.getAttribute('data-status') || 'Good Standing';
+            const total = parseFloat(row.getAttribute('data-total') || '5000').toFixed(2);
+            const paid = parseFloat(row.getAttribute('data-paid') || '0').toFixed(2);
+            const due = parseFloat(row.getAttribute('data-due') || '0').toFixed(2);
+            const feeStatus = row.getAttribute('data-fee') || 'DUE';
+            const date = row.getAttribute('data-date') || 'Active';
 
             document.getElementById('detail-student-id').textContent = '#' + id;
             document.getElementById('detail-student-name').textContent = name;
             document.getElementById('detail-student-email').textContent = email;
             document.getElementById('detail-student-dept').textContent = dept;
+            document.getElementById('detail-student-roll').textContent = roll;
+            document.getElementById('detail-student-sem').textContent = sem;
+            document.getElementById('detail-student-gpa').textContent = gpa;
+            document.getElementById('detail-student-att').textContent = att + '%';
+            document.getElementById('detail-student-standing').textContent = status;
+            document.getElementById('detail-student-total-fee').textContent = '$' + total;
+            document.getElementById('detail-student-paid-fee').textContent = '$' + paid;
+            document.getElementById('detail-student-due-fee').textContent = '$' + due;
+            document.getElementById('detail-student-fee-status').textContent = feeStatus;
             document.getElementById('detail-student-date').textContent = date;
 
             const avatar = document.getElementById('detail-student-avatar');
@@ -557,11 +559,11 @@ function initModals() {
                 avatar.textContent = initials;
             }
 
-            const editLink = document.getElementById('detail-edit-link');
-            if (editLink) {
-                editLink.onclick = () => {
+            const payBtn = document.getElementById('detail-pay-btn');
+            if (payBtn) {
+                payBtn.onclick = () => {
                     closeModal('modal-view-details');
-                    openEditModalFromData(id, name, email, dept, date);
+                    openPaymentModal(id, name, due);
                 };
             }
 
@@ -569,21 +571,46 @@ function initModals() {
         });
     });
 
-    // Single Edit Modal Handler
+    // Single Edit Modal
     document.querySelectorAll('.btn-open-edit-modal').forEach(btn => {
         btn.addEventListener('click', () => {
             const row = btn.closest('tr');
             if (!row) return;
+
             const id = row.getAttribute('data-id');
             const name = row.getAttribute('data-name');
             const email = row.getAttribute('data-email');
             const dept = row.getAttribute('data-dept');
+            const roll = row.getAttribute('data-roll');
+            const sem = row.getAttribute('data-sem');
+            const gpa = row.getAttribute('data-gpa');
+            const att = row.getAttribute('data-att');
+            const total = row.getAttribute('data-total');
+            const paid = row.getAttribute('data-paid');
             const date = row.getAttribute('data-date');
-            openEditModalFromData(id, name, email, dept, date);
+
+            const form = document.getElementById('form-edit-student');
+            if (!form) return;
+
+            form.action = `/students/update/${id}`;
+            document.getElementById('edit-student-id').value = id;
+            document.getElementById('edit-student-name').value = name;
+            document.getElementById('edit-student-email').value = email;
+            document.getElementById('edit-student-course').value = dept;
+
+            if (document.getElementById('edit-student-roll')) document.getElementById('edit-student-roll').value = roll;
+            if (document.getElementById('edit-student-sem')) document.getElementById('edit-student-sem').value = sem;
+            if (document.getElementById('edit-student-gpa')) document.getElementById('edit-student-gpa').value = gpa;
+            if (document.getElementById('edit-student-att')) document.getElementById('edit-student-att').value = att;
+            if (document.getElementById('edit-student-total')) document.getElementById('edit-student-total').value = total;
+            if (document.getElementById('edit-student-paid')) document.getElementById('edit-student-paid').value = paid;
+            if (document.getElementById('edit-student-date') && date) document.getElementById('edit-student-date').value = date;
+
+            openModal('modal-edit-student');
         });
     });
 
-    // Single Delete Modal Handler
+    // Delete Modal
     document.querySelectorAll('.btn-open-delete-modal').forEach(btn => {
         btn.addEventListener('click', () => {
             const row = btn.closest('tr');
@@ -593,30 +620,43 @@ function initModals() {
 
             document.getElementById('delete-modal-student-name').textContent = name;
             const confirmLink = document.getElementById('confirm-delete-link');
-            if (confirmLink) {
-                confirmLink.href = `/students/delete/${id}`;
-            }
+            if (confirmLink) confirmLink.href = `/students/delete/${id}`;
             openModal('modal-confirm-delete');
         });
     });
 }
 
-function openEditModalFromData(id, name, email, dept, date) {
-    const form = document.getElementById('form-edit-student');
+/* ==========================================================================
+   8. Record Payment Modal
+   ========================================================================== */
+function initPaymentModal() {
+    document.querySelectorAll('.btn-record-payment').forEach(btn => {
+        btn.addEventListener('click', () => {
+            const row = btn.closest('tr');
+            if (!row) return;
+            const id = row.getAttribute('data-id');
+            const name = row.getAttribute('data-name');
+            const due = row.getAttribute('data-due') || '0';
+            openPaymentModal(id, name, due);
+        });
+    });
+}
+
+function openPaymentModal(id, name, due) {
+    const form = document.getElementById('form-record-payment');
     if (!form) return;
 
-    form.action = `/students/update/${id}`;
-    document.getElementById('edit-student-id').value = id;
-    document.getElementById('edit-student-name').value = name;
-    document.getElementById('edit-student-email').value = email;
-    document.getElementById('edit-student-course').value = dept;
+    form.action = `/students/payment/${id}`;
+    document.getElementById('payment-student-name').textContent = name;
+    document.getElementById('payment-student-due').textContent = '$' + parseFloat(due).toFixed(2);
 
-    const dateInput = document.getElementById('edit-student-date');
-    if (dateInput && date) {
-        dateInput.value = date;
+    const amountInput = document.getElementById('payment-amount-input');
+    if (amountInput) {
+        amountInput.value = parseFloat(due) > 0 ? parseFloat(due) : 500;
+        amountInput.max = due;
     }
 
-    openModal('modal-edit-student');
+    openModal('modal-record-payment');
 }
 
 function openModal(id) {
@@ -624,104 +664,54 @@ function openModal(id) {
     if (modal) {
         modal.classList.add('active');
         const firstInput = modal.querySelector('input:not([type="hidden"]), select');
-        if (firstInput) {
-            setTimeout(() => firstInput.focus(), 100);
-        }
+        if (firstInput) setTimeout(() => firstInput.focus(), 100);
     }
 }
 
 function closeModal(id) {
     const modal = document.getElementById(id);
-    if (modal) {
-        modal.classList.remove('active');
-    }
+    if (modal) modal.classList.remove('active');
 }
 
 /* ==========================================================================
-   8. Form Validation
+   9. Form Validation
    ========================================================================== */
 function initFormValidation() {
-    const forms = document.querySelectorAll('.needs-validation');
-
-    forms.forEach(form => {
+    document.querySelectorAll('.needs-validation').forEach(form => {
         const nameInput = form.querySelector('[name="name"]');
         const emailInput = form.querySelector('[name="email"]');
         const courseInput = form.querySelector('[name="course"]');
 
         const validateName = () => {
             if (!nameInput) return true;
-            const valid = nameInput.value.trim().length >= 2;
-            setFieldStatus(nameInput, valid, 'Name must be at least 2 characters');
-            return valid;
+            return nameInput.value.trim().length >= 2;
         };
 
         const validateEmail = () => {
             if (!emailInput) return true;
-            const val = emailInput.value.trim();
             const emailRegex = /^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,63}$/;
-            const valid = emailRegex.test(val);
-            setFieldStatus(emailInput, valid, 'Please provide a valid email (e.g., student@domain.edu)');
-            return valid;
+            return emailRegex.test(emailInput.value.trim());
         };
-
-        const validateCourse = () => {
-            if (!courseInput) return true;
-            const valid = courseInput.value.trim().length > 0;
-            setFieldStatus(courseInput, valid, 'Please select or enter a department');
-            return valid;
-        };
-
-        if (nameInput) nameInput.addEventListener('input', validateName);
-        if (emailInput) emailInput.addEventListener('input', validateEmail);
-        if (courseInput) courseInput.addEventListener('change', validateCourse);
 
         form.addEventListener('submit', (e) => {
-            const isNameValid = validateName();
-            const isEmailValid = validateEmail();
-            const isCourseValid = validateCourse();
-
-            if (!isNameValid || !isEmailValid || !isCourseValid) {
+            if (!validateName() || !validateEmail()) {
                 e.preventDefault();
-                showToast('error', 'Validation Error', 'Please correct the highlighted form errors.');
+                showToast('error', 'Validation Error', 'Please check student name and email.');
             }
         });
     });
 }
 
-function setFieldStatus(input, isValid, errorMsg) {
-    const group = input.closest('.form-group');
-    if (!group) return;
-
-    let errorEl = group.querySelector('.form-error-feedback');
-    if (!errorEl) {
-        errorEl = document.createElement('div');
-        errorEl.className = 'form-error-feedback';
-        group.appendChild(errorEl);
-    }
-
-    if (isValid) {
-        input.style.borderColor = 'var(--accent-green)';
-        errorEl.style.display = 'none';
-    } else {
-        input.style.borderColor = 'var(--accent-red)';
-        errorEl.textContent = errorMsg;
-        errorEl.style.display = 'block';
-    }
-}
-
 /* ==========================================================================
-   9. Charts (Chart.js with SVG Native Fallback)
+   10. Charts
    ========================================================================== */
 let deptChartInstance = null;
 let trendChartInstance = null;
 
 function initCharts() {
     const deptCanvas = document.getElementById('departmentDistributionChart');
-    const analyticsCanvas = document.getElementById('analyticsDeptBarChart');
+    const feeCanvas = document.getElementById('feeDistributionChart');
 
-    if (!deptCanvas && !analyticsCanvas) return;
-
-    // Read Data Embedded in DOM
     const rawData = window.DEPARTMENT_DATA || {};
     const labels = Object.keys(rawData);
     const dataValues = Object.values(rawData);
@@ -731,16 +721,11 @@ function initCharts() {
         dataValues.push(1);
     }
 
-    const appleColors = [
-        '#0071e3', '#34c759', '#ff9500', '#af52de', '#30b0c7',
-        '#5856d6', '#ff2d55', '#a2845e', '#64d2ff', '#ffd60a'
-    ];
+    const appleColors = ['#0071e3', '#34c759', '#ff9500', '#af52de', '#30b0c7', '#5856d6'];
 
     if (typeof Chart !== 'undefined') {
-        // Doughnut Chart in Overview
         if (deptCanvas) {
-            const ctx = deptCanvas.getContext('2d');
-            deptChartInstance = new Chart(ctx, {
+            deptChartInstance = new Chart(deptCanvas.getContext('2d'), {
                 type: 'doughnut',
                 data: {
                     labels: labels,
@@ -756,57 +741,35 @@ function initCharts() {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: {
-                            position: 'bottom',
-                            labels: {
-                                font: { family: '-apple-system, sans-serif', size: 11 },
-                                boxWidth: 12,
-                                padding: 12
-                            }
-                        }
+                        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: { size: 11 } } }
                     },
                     cutout: '68%'
                 }
             });
         }
 
-        // Bar Chart in Analytics
-        if (analyticsCanvas) {
-            const ctx2 = analyticsCanvas.getContext('2d');
-            trendChartInstance = new Chart(ctx2, {
-                type: 'bar',
+        if (feeCanvas && window.FEE_DATA) {
+            trendChartInstance = new Chart(feeCanvas.getContext('2d'), {
+                type: 'doughnut',
                 data: {
-                    labels: labels,
+                    labels: ['Paid', 'Partial Due', 'Pending / Overdue'],
                     datasets: [{
-                        label: 'Enrolled Students',
-                        data: dataValues,
-                        backgroundColor: '#0071e3',
-                        borderRadius: 6
+                        data: [window.FEE_DATA.PAID || 0, window.FEE_DATA.PARTIAL || 0, window.FEE_DATA.DUE || 0],
+                        backgroundColor: ['#34c759', '#ff9500', '#ff3b30'],
+                        borderWidth: 2,
+                        borderColor: '#ffffff'
                     }]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { display: false }
+                        legend: { position: 'bottom', labels: { boxWidth: 10, padding: 8, font: { size: 11 } } }
                     },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: { stepSize: 1, font: { size: 11 } },
-                            grid: { color: 'rgba(0,0,0,0.05)' }
-                        },
-                        x: {
-                            grid: { display: false },
-                            ticks: { font: { size: 11 } }
-                        }
-                    }
+                    cutout: '68%'
                 }
             });
         }
-    } else {
-        // Lightweight SVG Fallback if Chart.js is offline
-        renderSvgFallbacks(labels, dataValues, appleColors);
     }
 }
 
@@ -815,32 +778,8 @@ function resizeCharts() {
     if (trendChartInstance) trendChartInstance.resize();
 }
 
-function renderSvgFallbacks(labels, dataValues, colors) {
-    const deptWrapper = document.getElementById('chart-wrapper-overview');
-    if (deptWrapper) {
-        let total = dataValues.reduce((a, b) => a + b, 0) || 1;
-        let html = '<div style="width:100%; padding:10px;">';
-        labels.forEach((label, i) => {
-            const pct = Math.round((dataValues[i] / total) * 100);
-            html += `
-                <div style="margin-bottom:8px;">
-                    <div style="display:flex; justify-content:space-between; font-size:12px; margin-bottom:3px;">
-                        <span>${label}</span>
-                        <b>${dataValues[i]} (${pct}%)</b>
-                    </div>
-                    <div style="background:#eee; height:8px; border-radius:4px; overflow:hidden;">
-                        <div style="background:${colors[i % colors.length]}; width:${pct}%; height:100%;"></div>
-                    </div>
-                </div>
-            `;
-        });
-        html += '</div>';
-        deptWrapper.innerHTML = html;
-    }
-}
-
 /* ==========================================================================
-   10. Toast Notification Manager
+   11. Toast Notifications
    ========================================================================== */
 function initToasts() {
     document.querySelectorAll('.macos-toast').forEach(toast => {
@@ -851,9 +790,7 @@ function initToasts() {
         }, 4500);
 
         const close = toast.querySelector('.toast-close');
-        if (close) {
-            close.addEventListener('click', () => toast.remove());
-        }
+        if (close) close.addEventListener('click', () => toast.remove());
     });
 }
 

@@ -39,6 +39,7 @@ public class StudentService {
         if (student.getRegistrationDate() == null) {
             student.setRegistrationDate(LocalDate.now());
         }
+        student.recalculateFeeStatus();
         Student saved = studentRepository.save(student);
         logActivity("CREATE", "Added student " + saved.getName() + " (" + saved.getCourse() + ")", saved.getName());
         return saved;
@@ -56,12 +57,51 @@ public class StudentService {
             student.setName(updatedStudent.getName());
             student.setEmail(updatedStudent.getEmail());
             student.setCourse(updatedStudent.getCourse());
+
+            if (updatedStudent.getRollNumber() != null) {
+                student.setRollNumber(updatedStudent.getRollNumber());
+            }
+            if (updatedStudent.getSemester() != null) {
+                student.setSemester(updatedStudent.getSemester());
+            }
+            if (updatedStudent.getGpa() != null) {
+                student.setGpa(updatedStudent.getGpa());
+            }
+            if (updatedStudent.getAttendance() != null) {
+                student.setAttendance(updatedStudent.getAttendance());
+            }
+            if (updatedStudent.getAcademicStatus() != null) {
+                student.setAcademicStatus(updatedStudent.getAcademicStatus());
+            }
+            if (updatedStudent.getTotalFee() != null) {
+                student.setTotalFee(updatedStudent.getTotalFee());
+            }
+            if (updatedStudent.getPaidFee() != null) {
+                student.setPaidFee(updatedStudent.getPaidFee());
+            }
+            if (updatedStudent.getFeeDueDate() != null) {
+                student.setFeeDueDate(updatedStudent.getFeeDueDate());
+            }
             if (updatedStudent.getRegistrationDate() != null) {
                 student.setRegistrationDate(updatedStudent.getRegistrationDate());
             }
 
+            student.recalculateFeeStatus();
             studentRepository.save(student);
-            logActivity("UPDATE", "Updated details for " + student.getName(), student.getName());
+            logActivity("UPDATE", "Updated academic & fee records for " + student.getName(), student.getName());
+        }
+    }
+
+    @Transactional
+    public void recordPayment(Long id, Double paymentAmount) {
+        Student student = studentRepository.findById(id).orElse(null);
+        if (student != null && paymentAmount != null && paymentAmount > 0) {
+            double currentPaid = student.getPaidFee();
+            student.setPaidFee(currentPaid + paymentAmount);
+            student.recalculateFeeStatus();
+            studentRepository.save(student);
+            logActivity("PAYMENT", String.format("Recorded payment of $%.2f for %s (Remaining Due: $%.2f)",
+                    paymentAmount, student.getName(), student.getDueFee()), student.getName());
         }
     }
 
@@ -129,6 +169,48 @@ public class StudentService {
         }).count();
     }
 
+    public double getTotalFeesCollected() {
+        return studentRepository.findAll().stream()
+                .mapToDouble(Student::getPaidFee)
+                .sum();
+    }
+
+    public double getTotalFeesPending() {
+        return studentRepository.findAll().stream()
+                .mapToDouble(Student::getDueFee)
+                .sum();
+    }
+
+    public double getCollectionRate() {
+        double collected = getTotalFeesCollected();
+        double pending = getTotalFeesPending();
+        double total = collected + pending;
+        if (total <= 0) return 100.0;
+        return Math.round((collected / total) * 1000.0) / 10.0;
+    }
+
+    public double getAverageGpa() {
+        List<Student> students = studentRepository.findAll();
+        if (students.isEmpty()) return 3.5;
+        double avg = students.stream().mapToDouble(Student::getGpa).average().orElse(3.5);
+        return Math.round(avg * 100.0) / 100.0;
+    }
+
+    public int getAverageAttendance() {
+        List<Student> students = studentRepository.findAll();
+        if (students.isEmpty()) return 90;
+        return (int) Math.round(students.stream().mapToInt(Student::getAttendance).average().orElse(90.0));
+    }
+
+    public Map<String, Long> getFeeStatusDistribution() {
+        List<Student> students = studentRepository.findAll();
+        Map<String, Long> map = new HashMap<>();
+        map.put("PAID", students.stream().filter(s -> "PAID".equalsIgnoreCase(s.getFeeStatus())).count());
+        map.put("PARTIAL", students.stream().filter(s -> "PARTIAL".equalsIgnoreCase(s.getFeeStatus())).count());
+        map.put("DUE", students.stream().filter(s -> "DUE".equalsIgnoreCase(s.getFeeStatus()) || "OVERDUE".equalsIgnoreCase(s.getFeeStatus())).count());
+        return map;
+    }
+
     public List<Student> getRecentlyAddedStudents(int limit) {
         return studentRepository.findAll().stream()
                 .sorted((a, b) -> Long.compare(b.getId() != null ? b.getId() : 0, a.getId() != null ? a.getId() : 0))
@@ -139,8 +221,7 @@ public class StudentService {
     public List<ActivityLog> getRecentActivities() {
         List<ActivityLog> logs = activityLogRepository.findTop15ByOrderByTimestampDesc();
         if (logs.isEmpty()) {
-            // Seed a starter activity for fresh or existing systems
-            ActivityLog initial = new ActivityLog("SYSTEM", "System initialized and ready", "System");
+            ActivityLog initial = new ActivityLog("SYSTEM", "System initialized with Academic & Fee modules", "System");
             activityLogRepository.save(initial);
             logs = List.of(initial);
         }
@@ -152,21 +233,28 @@ public class StudentService {
             ActivityLog log = new ActivityLog(action, description, studentName);
             activityLogRepository.save(log);
         } catch (Exception ignored) {
-            // Non-critical logging shouldn't crash main operation
         }
     }
 
     public void exportStudentsToCsv(Writer writer) throws IOException {
         PrintWriter pw = new PrintWriter(writer);
-        pw.println("ID,Name,Email,Department,Registration Date");
+        pw.println("ID,Roll Number,Name,Email,Department,Semester,GPA,Attendance %,Total Fee,Paid Fee,Due Balance,Fee Status,Registration Date");
 
         List<Student> students = studentRepository.findAll();
         for (Student s : students) {
-            pw.printf("%d,\"%s\",\"%s\",\"%s\",%s%n",
+            pw.printf("%d,\"%s\",\"%s\",\"%s\",\"%s\",\"%s\",%.2f,%d,%.2f,%.2f,%.2f,\"%s\",%s%n",
                     s.getId() != null ? s.getId() : 0,
+                    escapeCsv(s.getRollNumber()),
                     escapeCsv(s.getName()),
                     escapeCsv(s.getEmail()),
                     escapeCsv(s.getCourse()),
+                    escapeCsv(s.getSemester()),
+                    s.getGpa(),
+                    s.getAttendance(),
+                    s.getTotalFee(),
+                    s.getPaidFee(),
+                    s.getDueFee(),
+                    escapeCsv(s.getFeeStatus()),
                     s.getRegistrationDate() != null ? s.getRegistrationDate().toString() : LocalDate.now().toString()
             );
         }
@@ -220,25 +308,25 @@ public class StudentService {
                     continue;
                 }
 
-                // Header check if second header row exists
                 if (parts[0].equalsIgnoreCase("name") && parts[1].toLowerCase().contains("email")) {
                     continue;
                 }
 
-                String name = parts[0].trim();
-                String email = parts[1].trim().toLowerCase();
-                String course = parts[2].trim();
-                LocalDate regDate = LocalDate.now();
+                // Format can be: Name, Email, Course... OR ID, RollNo, Name, Email, Course...
+                int nameIdx = 0;
+                int emailIdx = 1;
+                int courseIdx = 2;
 
-                if (parts.length >= 4 && !parts[3].trim().isEmpty()) {
-                    try {
-                        regDate = LocalDate.parse(parts[3].trim(), DateTimeFormatter.ISO_LOCAL_DATE);
-                    } catch (Exception e) {
-                        regDate = LocalDate.now();
-                    }
+                if (parts[0].matches("^\\d+$") && parts.length >= 5) {
+                    nameIdx = 2;
+                    emailIdx = 3;
+                    courseIdx = 4;
                 }
 
-                // Validation
+                String name = parts[nameIdx].trim();
+                String email = parts[emailIdx].trim().toLowerCase();
+                String course = parts[courseIdx].trim();
+
                 if (name.isEmpty()) {
                     result.skippedCount++;
                     result.getErrorMessages().add("Line " + lineNum + ": Student name is empty.");
@@ -255,7 +343,6 @@ public class StudentService {
                     course = "General";
                 }
 
-                // Duplicate checking
                 if (processedEmailsInFile.contains(email)) {
                     result.skippedCount++;
                     result.getErrorMessages().add("Line " + lineNum + ": Duplicate email in file for '" + email + "'.");
@@ -269,7 +356,7 @@ public class StudentService {
                 }
 
                 processedEmailsInFile.add(email);
-                Student student = new Student(name, email, course, regDate);
+                Student student = new Student(name, email, course);
                 studentsToSave.add(student);
             }
         }
@@ -293,7 +380,7 @@ public class StudentService {
             if (c == '\"') {
                 if (inQuotes && i + 1 < line.length() && line.charAt(i + 1) == '\"') {
                     sb.append('\"');
-                    i++; // skip escaped quote
+                    i++;
                 } else {
                     inQuotes = !inQuotes;
                 }

@@ -8,7 +8,7 @@
     <!-- macOS Dashboard Design System -->
     <link rel="stylesheet" th:href="@{/css/macos-dashboard.css}">
     
-    <!-- Chart.js (with built-in offline SVG fallback) -->
+    <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
 </head>
 <body>
@@ -37,7 +37,7 @@
 <!-- Main macOS Window Frame -->
 <div class="macos-window">
 
-    <!-- macOS Titlebar / Traffic Lights -->
+    <!-- macOS Titlebar -->
     <header class="window-header">
         <div class="window-traffic-lights">
             <span class="traffic-light close" id="traffic-close" title="Close Window"></span>
@@ -82,7 +82,7 @@
     <!-- macOS Window Body -->
     <div class="window-body">
 
-        <!-- macOS Sidebar Navigation -->
+        <!-- Sidebar Navigation -->
         <aside class="macos-sidebar">
             <div class="sidebar-nav-group">
                 <div class="sidebar-section-title">Navigation</div>
@@ -121,7 +121,7 @@
                             <line x1="22" x2="16" y1="11" y2="11"/>
                         </svg>
                     </span>
-                    <span class="nav-item-label">Add Student</span>
+                    <span class="nav-item-label">Enroll Student</span>
                 </a>
 
                 <a href="#analytics" class="nav-item" th:classappend="${activeSection == 'analytics' ? 'active' : ''}" data-section="analytics">
@@ -132,7 +132,7 @@
                             <line x1="6" x2="6" y1="20" y2="14"/>
                         </svg>
                     </span>
-                    <span class="nav-item-label">Analytics</span>
+                    <span class="nav-item-label">Analytics & Finance</span>
                 </a>
 
                 <a href="#reports" class="nav-item" th:classappend="${activeSection == 'reports' ? 'active' : ''}" data-section="reports">
@@ -163,9 +163,7 @@
                 <div class="db-status-card">
                     <div class="db-status-header">
                         <span>Database Node</span>
-                        <span class="db-status-indicator">
-                            <span class="badge-dot"></span> Online
-                        </span>
+                        <span class="db-status-indicator"><span class="badge-dot"></span> Online</span>
                     </div>
                     <div class="db-status-meta">student_management</div>
                     <div class="db-status-meta">Port 3306 (Docker)</div>
@@ -199,7 +197,7 @@
                         <span>New Student</span>
                     </button>
 
-                    <a th:href="@{/students/export}" class="btn btn-secondary" title="Export all students to CSV">
+                    <a th:href="@{/students/export}" class="btn btn-secondary" title="Export to CSV">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                             <polyline points="7 10 12 15 17 10"/>
@@ -208,7 +206,7 @@
                         <span>Export CSV</span>
                     </a>
 
-                    <button class="btn btn-secondary" type="button" data-open-modal="modal-import-csv" title="Upload student CSV">
+                    <button class="btn btn-secondary" type="button" data-open-modal="modal-import-csv" title="Upload CSV">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                             <polyline points="17 8 12 3 7 8"/>
@@ -227,10 +225,10 @@
                 </div>
             </div>
 
-            <!-- Printable Only Official Document Header -->
+            <!-- Print Header -->
             <div class="print-only-header">
-                <h2 style="font-size: 22px; margin-bottom: 4px;">Student Management System — Official Academic Record</h2>
-                <p style="color: #666; font-size: 13px;">Generated on <span th:text="${currentDate}">Date</span> | Active Database Records: <strong th:text="${totalStudents}">0</strong></p>
+                <h2 style="font-size: 20px; margin-bottom: 4px;">Student Management Pro — Official Academic & Fee Roster</h2>
+                <p style="color: #666; font-size: 12px;">Generated on <span th:text="${currentDate}">Date</span> | Active Database Records: <strong th:text="${totalStudents}">0</strong></p>
             </div>
 
             <!-- ===================================================================
@@ -238,14 +236,14 @@
                  =================================================================== -->
             <section class="view-section" th:classappend="${activeSection == 'overview' ? 'active' : ''}" id="section-overview">
 
-                <!-- 4 Key Statistic Cards -->
+                <!-- 4 KPI Cards: Academic + Financial -->
                 <div class="stats-grid">
-                    <!-- Total Students Card -->
+                    <!-- Total Students -->
                     <div class="stat-card">
                         <div class="stat-card-header">
-                            <span class="stat-card-title">Total Students</span>
+                            <span class="stat-card-title">Enrolled Students</span>
                             <div class="stat-card-icon blue">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                     <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
                                     <circle cx="9" cy="7" r="4"/>
                                     <path d="M22 21v-2a4 4 0 0 0-3-3.87"/>
@@ -255,134 +253,71 @@
                         </div>
                         <div class="stat-card-value" th:text="${totalStudents}">0</div>
                         <div class="stat-card-footer">
-                            <span class="trend-pill positive">● Active</span>
-                            <span>Live database records</span>
+                            <span class="trend-pill positive">● Live</span>
+                            <span>Across <strong th:text="${totalDepartments}">0</strong> departments</span>
                         </div>
                     </div>
 
-                    <!-- Total Departments Card -->
+                    <!-- Academic Performance: Average GPA -->
                     <div class="stat-card">
                         <div class="stat-card-header">
-                            <span class="stat-card-title">Departments</span>
+                            <span class="stat-card-title">Academic GPA</span>
                             <div class="stat-card-icon purple">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect width="18" height="18" x="3" y="3" rx="2"/>
-                                    <path d="M3 9h18"/>
-                                    <path d="M9 21V9"/>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M22 10v6M2 10l10-5 10 5-10 5z"/>
+                                    <path d="M6 12v5c3 3 9 3 12 0v-5"/>
                                 </svg>
                             </div>
                         </div>
-                        <div class="stat-card-value" th:text="${totalDepartments}">0</div>
+                        <div class="stat-card-value" th:text="${#numbers.formatDecimal(avgGpa, 1, 2)}">3.50</div>
                         <div class="stat-card-footer">
-                            <span class="trend-pill neutral">Programs</span>
-                            <span>Distinct courses active</span>
+                            <span class="trend-pill positive" th:text="${avgAttendance} + '% Attendance'">90% Attendance</span>
+                            <span>Campus Average</span>
                         </div>
                     </div>
 
-                    <!-- New Students This Month Card -->
+                    <!-- Tuition Fees Collected -->
                     <div class="stat-card">
                         <div class="stat-card-header">
-                            <span class="stat-card-title">New This Month</span>
+                            <span class="stat-card-title">Fees Collected</span>
                             <div class="stat-card-icon green">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <rect width="18" height="18" x="3" y="4" rx="2" ry="2"/>
-                                    <line x1="16" x2="16" y1="2" y2="6"/>
-                                    <line x1="8" x2="8" y1="2" y2="6"/>
-                                    <line x1="3" x2="21" y1="10" y2="10"/>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <line x1="12" x2="12" y1="2" y2="22"/>
+                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                                 </svg>
                             </div>
                         </div>
-                        <div class="stat-card-value" th:text="${newThisMonth}">0</div>
+                        <div class="stat-card-value" th:text="'$' + ${#numbers.formatDecimal(totalFeesCollected, 1, 0)}">$0</div>
                         <div class="stat-card-footer">
-                            <span class="trend-pill positive">+ Intake</span>
-                            <span>Registered recently</span>
+                            <span class="trend-pill positive" th:text="${collectionRate} + '%'">85%</span>
+                            <span>Tuition realization rate</span>
                         </div>
                     </div>
 
-                    <!-- System Health Card -->
+                    <!-- Tuition Fees Outstanding Due -->
                     <div class="stat-card">
                         <div class="stat-card-header">
-                            <span class="stat-card-title">System Status</span>
+                            <span class="stat-card-title">Outstanding Dues</span>
                             <div class="stat-card-icon orange">
-                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <line x1="12" x2="12" y1="8" y2="12"/>
+                                    <line x1="12" x2="12.01" y1="16" y2="16"/>
                                 </svg>
                             </div>
                         </div>
-                        <div class="stat-card-value" style="font-size: 22px; padding-top: 4px;">Operational</div>
+                        <div class="stat-card-value" style="color: var(--accent-red);" th:text="'$' + ${#numbers.formatDecimal(totalFeesPending, 1, 0)}">$0</div>
                         <div class="stat-card-footer">
-                            <span class="trend-pill positive">Port 8081</span>
-                            <span>MySQL 8.4 Engine</span>
+                            <div class="progress-bar-container">
+                                <div class="progress-bar-fill" th:style="'width: ' + ${collectionRate} + '%;'"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
-                <!-- Quick Action Shortcuts -->
-                <div class="quick-actions-bar">
-                    <div class="quick-action-card" data-open-modal="modal-add-student">
-                        <div class="quick-action-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                                <circle cx="9" cy="7" r="4"/>
-                                <line x1="19" x2="19" y1="8" y2="14"/>
-                                <line x1="22" x2="16" y1="11" y2="11"/>
-                            </svg>
-                        </div>
-                        <div class="quick-action-info">
-                            <h4>Enroll Student</h4>
-                            <p>Register new academic profile</p>
-                        </div>
-                    </div>
-
-                    <a th:href="@{/students/export}" class="quick-action-card">
-                        <div class="quick-action-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="7 10 12 15 17 10"/>
-                                <line x1="12" x2="12" y1="15" y2="3"/>
-                            </svg>
-                        </div>
-                        <div class="quick-action-info">
-                            <h4>Export Data</h4>
-                            <p>Download full CSV spreadsheet</p>
-                        </div>
-                    </a>
-
-                    <div class="quick-action-card" data-open-modal="modal-import-csv">
-                        <div class="quick-action-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="17 8 12 3 7 8"/>
-                                <line x1="12" x2="12" y1="3" y2="15"/>
-                            </svg>
-                        </div>
-                        <div class="quick-action-info">
-                            <h4>Import Batch</h4>
-                            <p>Upload CSV student roster</p>
-                        </div>
-                    </div>
-
-                    <div class="quick-action-card" data-switch-to="students">
-                        <div class="quick-action-icon">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="8" x2="21" y1="6" y2="6"/>
-                                <line x1="8" x2="21" y1="12" y2="12"/>
-                                <line x1="8" x2="21" y1="18" y2="18"/>
-                                <line x1="3" x2="3.01" y1="6" y2="6"/>
-                                <line x1="3" x2="3.01" y1="12" y2="12"/>
-                                <line x1="3" x2="3.01" y1="18" y2="18"/>
-                            </svg>
-                        </div>
-                        <div class="quick-action-info">
-                            <h4>Manage Directory</h4>
-                            <p>Search, filter and edit records</p>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- Two-Column Layout: Chart & Activity Feed -->
+                <!-- Two-Column Layout: Charts & Activity -->
                 <div class="dashboard-columns">
-                    <!-- Left: Department Distribution Chart -->
+                    <!-- Department Distribution Chart -->
                     <div class="dashboard-panel">
                         <div class="panel-header">
                             <h3 class="panel-title">
@@ -392,15 +327,14 @@
                                 </svg>
                                 <span>Department Distribution</span>
                             </h3>
-                            <button class="btn btn-subtle btn-sm" type="button" data-switch-to="analytics">Full Analytics ›</button>
+                            <button class="btn btn-subtle btn-sm" type="button" data-switch-to="analytics">Analytics ›</button>
                         </div>
-
-                        <div class="chart-wrapper" id="chart-wrapper-overview">
+                        <div class="chart-wrapper">
                             <canvas id="departmentDistributionChart"></canvas>
                         </div>
                     </div>
 
-                    <!-- Right: Persistent Recent Activity Feed -->
+                    <!-- Persistent Activity Feed -->
                     <div class="dashboard-panel">
                         <div class="panel-header">
                             <h3 class="panel-title">
@@ -420,10 +354,6 @@
                                     <div class="activity-time" th:text="${act.formattedTime}">Timestamp</div>
                                 </div>
                             </div>
-
-                            <div th:if="${#lists.isEmpty(recentActivities)}" style="text-align: center; color: var(--text-tertiary); padding: 30px;">
-                                No recent activity logged yet.
-                            </div>
                         </div>
                     </div>
                 </div>
@@ -438,18 +368,18 @@
                             </svg>
                             <span>Recently Enrolled Students</span>
                         </h3>
-                        <button class="btn btn-subtle btn-sm" type="button" data-switch-to="students">View All Students ›</button>
+                        <button class="btn btn-subtle btn-sm" type="button" data-switch-to="students">View Full Directory ›</button>
                     </div>
 
                     <div class="table-container" style="box-shadow: none; border: none; margin-bottom: 0;">
                         <table class="macos-table">
                             <thead>
                                 <tr>
-                                    <th>ID</th>
+                                    <th>Roll No</th>
                                     <th>Student</th>
-                                    <th>Email</th>
                                     <th>Department</th>
-                                    <th>Enrolled Date</th>
+                                    <th>Academic Standing</th>
+                                    <th>Fee Status</th>
                                     <th>Action</th>
                                 </tr>
                             </thead>
@@ -459,36 +389,54 @@
                                     th:data-name="${s.name}"
                                     th:data-email="${s.email}"
                                     th:data-dept="${s.course}"
+                                    th:data-roll="${s.rollNumber}"
+                                    th:data-sem="${s.semester}"
+                                    th:data-gpa="${s.gpa}"
+                                    th:data-att="${s.attendance}"
+                                    th:data-status="${s.academicStatus}"
+                                    th:data-total="${s.totalFee}"
+                                    th:data-paid="${s.paidFee}"
+                                    th:data-due="${s.dueFee}"
+                                    th:data-fee="${s.feeStatus}"
                                     th:data-date="${s.registrationDate}">
-                                    <td><span class="student-meta-id" th:text="'#' + ${s.id}">#1</span></td>
+                                    <td><span class="student-meta-roll" th:text="${s.rollNumber}">2026-001</span></td>
                                     <td>
                                         <div class="student-profile-cell">
                                             <div class="student-avatar" th:text="${s.initials}">ST</div>
-                                            <span class="student-meta-name" th:text="${s.name}">Student Name</span>
+                                            <div>
+                                                <div class="student-meta-name" th:text="${s.name}">Student Name</div>
+                                                <div class="student-meta-roll" th:text="${s.email}">email@campus.edu</div>
+                                            </div>
                                         </div>
                                     </td>
-                                    <td th:text="${s.email}">email@domain.com</td>
-                                    <td><span class="dept-badge" th:text="${s.course}">CSE</span></td>
-                                    <td th:text="${s.registrationDate}">2026-11-11</td>
+                                    <td>
+                                        <span class="dept-badge" th:text="${s.course}">CSE</span>
+                                        <span style="font-size: 11px; color: var(--text-tertiary);" th:text="${s.semester}">Sem 1</span>
+                                    </td>
+                                    <td>
+                                        <span class="gpa-pill" th:classappend="${s.gpa >= 3.8 ? 'honors' : ''}" th:text="'GPA ' + ${s.gpa}">GPA 3.8</span>
+                                    </td>
+                                    <td>
+                                        <span class="fee-badge" th:classappend="${s.feeStatus}"
+                                              th:text="${s.feeStatus == 'PAID' ? '🟢 Paid' : (s.feeStatus == 'PARTIAL' ? '🟠 Due: $' + s.dueFee : '🔴 Due: $' + s.dueFee)}">
+                                            Fee Status
+                                        </span>
+                                    </td>
                                     <td>
                                         <div class="action-btn-group">
-                                            <button class="action-icon-btn btn-view-details" type="button" title="View Student Profile">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <button class="action-icon-btn btn-view-details" type="button" title="View Profile">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                     <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
                                                     <circle cx="12" cy="12" r="3"/>
                                                 </svg>
                                             </button>
-                                            <button class="action-icon-btn btn-open-edit-modal" type="button" title="Edit Student">
-                                                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                                    <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
+                                            <button th:if="${s.dueFee > 0}" class="action-icon-btn pay btn-record-payment" type="button" title="Record Payment">
+                                                <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                    <line x1="12" x2="12" y1="2" y2="22"/>
+                                                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
                                                 </svg>
                                             </button>
                                         </div>
-                                    </td>
-                                </tr>
-                                <tr th:if="${#lists.isEmpty(recentStudents)}">
-                                    <td colspan="6" style="text-align: center; padding: 30px; color: var(--text-tertiary);">
-                                        No students registered yet. Click "New Student" above to enroll one!
                                     </td>
                                 </tr>
                             </tbody>
@@ -499,26 +447,48 @@
             </section>
 
             <!-- ===================================================================
-                 SECTION 2: ALL STUDENTS MANAGEMENT
+                 SECTION 2: ALL STUDENTS (ACADEMIC + FEES DIRECTORY)
                  =================================================================== -->
             <section class="view-section" th:classappend="${activeSection == 'students' ? 'active' : ''}" id="section-students">
 
                 <!-- Table Controls Toolbar -->
                 <div class="table-toolbar">
                     <div class="filter-group">
-                        <!-- Instant Live Search Input -->
+                        <!-- Search Input -->
                         <div class="search-input-wrapper">
                             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                 <circle cx="11" cy="11" r="8"/>
                                 <line x1="21" x2="16.65" y1="21" y2="16.65"/>
                             </svg>
-                            <input type="text" class="search-input" id="table-search-input" placeholder="Search name, email, department...">
+                            <input type="text" class="search-input" id="table-search-input" placeholder="Search name, roll, email, dept...">
                         </div>
 
-                        <!-- Department Filter Dropdown -->
+                        <!-- Department Filter -->
                         <select class="select-filter" id="table-dept-filter">
                             <option value="ALL">All Departments</option>
                             <option th:each="dept : ${departments}" th:value="${dept}" th:text="${dept}">Department</option>
+                        </select>
+
+                        <!-- Semester Filter -->
+                        <select class="select-filter" id="table-sem-filter">
+                            <option value="ALL">All Semesters</option>
+                            <option value="Semester 1">Semester 1</option>
+                            <option value="Semester 2">Semester 2</option>
+                            <option value="Semester 3">Semester 3</option>
+                            <option value="Semester 4">Semester 4</option>
+                            <option value="Semester 5">Semester 5</option>
+                            <option value="Semester 6">Semester 6</option>
+                            <option value="Semester 7">Semester 7</option>
+                            <option value="Semester 8">Semester 8</option>
+                        </select>
+
+                        <!-- Fee Status Filter -->
+                        <select class="select-filter" id="table-fee-filter">
+                            <option value="ALL">All Fee Status</option>
+                            <option value="PAID">🟢 Paid</option>
+                            <option value="PARTIAL">🟠 Partial Balance</option>
+                            <option value="DUE">🔴 Pending / Due</option>
+                            <option value="OVERDUE">🔴 Overdue</option>
                         </select>
 
                         <!-- Sort By Selector -->
@@ -526,8 +496,8 @@
                             <option value="id_desc">Sort: Newest First</option>
                             <option value="id_asc">Sort: Oldest First</option>
                             <option value="name_asc">Sort: Name (A–Z)</option>
-                            <option value="name_desc">Sort: Name (Z–A)</option>
-                            <option value="dept_asc">Sort: Department</option>
+                            <option value="gpa_desc">Sort: Highest GPA</option>
+                            <option value="due_desc">Sort: Highest Due Fee</option>
                         </select>
 
                         <!-- Page Size Selector -->
@@ -544,38 +514,38 @@
                             <line x1="12" x2="12" y1="5" y2="19"/>
                             <line x1="5" x2="19" y1="12" y2="12"/>
                         </svg>
-                        <span>Add Student</span>
+                        <span>Enroll Student</span>
                     </button>
                 </div>
 
-                <!-- Dynamic Bulk Actions Bar -->
+                <!-- Bulk Actions Bar -->
                 <div class="bulk-actions-bar" id="bulk-actions-bar">
                     <span class="bulk-count-badge" id="bulk-selected-count">0 students selected</span>
                     <button class="btn btn-danger btn-sm" id="bulk-delete-trigger-btn" type="button">
                         <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                             <path d="M3 6h18"/>
                             <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                            <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
                         </svg>
                         <span>Delete Selected</span>
                     </button>
                     <button class="btn btn-subtle btn-sm" id="bulk-deselect-btn" type="button">Deselect All</button>
                 </div>
 
-                <!-- macOS Modern Data Table -->
+                <!-- Modern Student Table with Academic & Fees Details -->
                 <div class="table-container">
                     <table class="macos-table" id="students-data-table">
                         <thead>
                             <tr>
-                                <th style="width: 38px;">
+                                <th style="width: 36px;">
                                     <input type="checkbox" class="macos-checkbox" id="select-all-students" title="Select all visible">
                                 </th>
-                                <th style="width: 70px;">ID</th>
+                                <th>Roll No</th>
                                 <th>Student</th>
-                                <th>Email</th>
-                                <th>Department</th>
-                                <th>Registration Date</th>
-                                <th style="width: 120px; text-align: right;">Actions</th>
+                                <th>Department & Semester</th>
+                                <th>GPA & Standing</th>
+                                <th>Attendance</th>
+                                <th>Fee Status & Dues</th>
+                                <th style="width: 130px; text-align: right;">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -584,6 +554,15 @@
                                 th:data-name="${student.name}"
                                 th:data-email="${student.email}"
                                 th:data-dept="${student.course}"
+                                th:data-roll="${student.rollNumber}"
+                                th:data-sem="${student.semester}"
+                                th:data-gpa="${student.gpa}"
+                                th:data-att="${student.attendance}"
+                                th:data-status="${student.academicStatus}"
+                                th:data-total="${student.totalFee}"
+                                th:data-paid="${student.paidFee}"
+                                th:data-due="${student.dueFee}"
+                                th:data-fee="${student.feeStatus}"
                                 th:data-date="${student.registrationDate}">
                                 
                                 <td>
@@ -591,7 +570,7 @@
                                 </td>
                                 
                                 <td>
-                                    <span class="student-meta-id" th:text="'#' + ${student.id}">#1</span>
+                                    <span class="student-meta-roll" th:text="${student.rollNumber}">STU-001</span>
                                 </td>
 
                                 <td>
@@ -599,67 +578,84 @@
                                         <div class="student-avatar" th:text="${student.initials}">ST</div>
                                         <div>
                                             <div class="student-meta-name" th:text="${student.name}">Student Name</div>
-                                            <div class="student-meta-id" th:text="'ID: ' + ${student.id}">ID: 1</div>
+                                            <div class="student-meta-roll" th:text="${student.email}">student@email.com</div>
                                         </div>
                                     </div>
                                 </td>
 
                                 <td>
-                                    <span th:text="${student.email}">student@email.com</span>
+                                    <div><span class="dept-badge" th:text="${student.course}">Computer Science</span></div>
+                                    <div style="font-size: 11px; color: var(--text-tertiary); margin-top: 2px;" th:text="${student.semester}">Semester 1</div>
                                 </td>
 
                                 <td>
-                                    <span class="dept-badge" th:text="${student.course}">Computer Science</span>
+                                    <div>
+                                        <span class="gpa-pill" th:classappend="${student.gpa >= 3.8 ? 'honors' : ''}" th:text="'GPA ' + ${student.gpa}">GPA 3.85</span>
+                                    </div>
+                                    <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;" th:text="${student.academicStatus}">Good Standing</div>
                                 </td>
 
                                 <td>
-                                    <span th:text="${student.registrationDate != null ? student.registrationDate : 'Active'}">2026-11-11</span>
+                                    <span class="attendance-pill"
+                                          th:classappend="${student.attendance >= 85 ? 'high' : (student.attendance >= 75 ? 'medium' : 'low')}"
+                                          th:text="${student.attendance} + '%'">
+                                        90%
+                                    </span>
+                                </td>
+
+                                <td>
+                                    <div>
+                                        <span class="fee-badge" th:classappend="${student.feeStatus}"
+                                              th:text="${student.feeStatus == 'PAID' ? '🟢 Paid' : (student.feeStatus == 'PARTIAL' ? '🟠 Due: $' + student.dueFee : '🔴 Due: $' + student.dueFee)}">
+                                            Fee Status
+                                        </span>
+                                    </div>
+                                    <div style="font-size: 10px; color: var(--text-tertiary); margin-top: 2px;"
+                                         th:text="'Paid: $' + ${student.paidFee} + ' / $' + ${student.totalFee}">
+                                        Paid: $0 / $5000
+                                    </div>
                                 </td>
 
                                 <td style="text-align: right;">
                                     <div class="action-btn-group" style="justify-content: flex-end;">
-                                        <!-- View Details -->
-                                        <button class="action-icon-btn btn-view-details" type="button" title="View Full Details">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <!-- View Profile -->
+                                        <button class="action-icon-btn btn-view-details" type="button" title="View Full Profile">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/>
                                                 <circle cx="12" cy="12" r="3"/>
                                             </svg>
                                         </button>
 
+                                        <!-- Quick Record Payment -->
+                                        <button th:if="${student.dueFee > 0}" class="action-icon-btn pay btn-record-payment" type="button" title="Record Fee Payment">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <line x1="12" x2="12" y1="2" y2="22"/>
+                                                <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/>
+                                            </svg>
+                                        </button>
+
                                         <!-- Edit Modal Trigger -->
                                         <button class="action-icon-btn btn-open-edit-modal" type="button" title="Edit Student">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/>
                                             </svg>
                                         </button>
 
-                                        <!-- Delete Dialog Trigger -->
+                                        <!-- Delete Trigger -->
                                         <button class="action-icon-btn delete btn-open-delete-modal" type="button" title="Delete Student">
-                                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                                                 <path d="M3 6h18"/>
                                                 <path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/>
-                                                <path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/>
                                             </svg>
                                         </button>
                                     </div>
-                                </td>
-                            </tr>
-
-                            <tr th:if="${#lists.isEmpty(students)}">
-                                <td colspan="7" style="text-align: center; padding: 48px; color: var(--text-tertiary);">
-                                    <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom: 8px; opacity: 0.5;">
-                                        <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/>
-                                        <circle cx="9" cy="7" r="4"/>
-                                    </svg>
-                                    <div style="font-size: 15px; font-weight: 500; color: var(--text-primary); margin-bottom: 4px;">No student records found</div>
-                                    <p style="font-size: 13px;">Add your first student or import from a CSV file.</p>
                                 </td>
                             </tr>
                         </tbody>
                     </table>
                 </div>
 
-                <!-- Table Pagination Bar -->
+                <!-- Pagination -->
                 <div class="pagination-bar">
                     <span id="pagination-info">Showing entries...</span>
                     <div class="pagination-controls" id="pagination-controls"></div>
@@ -668,229 +664,130 @@
             </section>
 
             <!-- ===================================================================
-                 SECTION 3: ANALYTICS & INSIGHTS
+                 SECTION 3: ANALYTICS & FINANCIAL PERFORMANCE
                  =================================================================== -->
             <section class="view-section" th:classappend="${activeSection == 'analytics' ? 'active' : ''}" id="section-analytics">
 
-                <div class="analytics-cards-row">
+                <div class="stats-grid">
                     <div class="stat-card">
-                        <div class="stat-card-title">Enrollment Capacity</div>
-                        <div class="stat-card-value" th:text="${totalStudents}">0</div>
-                        <div class="stat-card-footer">Verified MySQL entities active</div>
+                        <div class="stat-card-title">Campus Realization Rate</div>
+                        <div class="stat-card-value" th:text="${collectionRate} + '%'">0%</div>
+                        <div class="stat-card-footer">Fees Collected / Total Invoiced</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-card-title">Academic Divisions</div>
-                        <div class="stat-card-value" th:text="${totalDepartments}">0</div>
-                        <div class="stat-card-footer">Distinct departments registered</div>
+                        <div class="stat-card-title">Average Attendance</div>
+                        <div class="stat-card-value" th:text="${avgAttendance} + '%'">0%</div>
+                        <div class="stat-card-footer">Campus-wide attendance average</div>
                     </div>
                     <div class="stat-card">
-                        <div class="stat-card-title">Current Month Intake</div>
-                        <div class="stat-card-value" th:text="${newThisMonth}">0</div>
-                        <div class="stat-card-footer">Intake registered this month</div>
+                        <div class="stat-card-title">Outstanding Tuition Due</div>
+                        <div class="stat-card-value" style="color: var(--accent-red);" th:text="'$' + ${#numbers.formatDecimal(totalFeesPending, 1, 0)}">$0</div>
+                        <div class="stat-card-footer">Pending bursar collection</div>
                     </div>
                 </div>
 
-                <div class="dashboard-panel" style="margin-bottom: 24px;">
-                    <div class="panel-header">
-                        <h3 class="panel-title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <line x1="18" x2="18" y1="20" y2="10"/>
-                                <line x1="12" x2="12" y1="20" y2="4"/>
-                                <line x1="6" x2="6" y1="20" y2="14"/>
-                            </svg>
-                            <span>Department Enrollment Breakdown</span>
-                        </h3>
+                <div class="dashboard-columns">
+                    <div class="dashboard-panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">Tuition Fee Status Breakdown</h3>
+                        </div>
+                        <div class="chart-wrapper">
+                            <canvas id="feeDistributionChart"></canvas>
+                        </div>
                     </div>
-                    <div class="chart-wrapper" style="min-height: 280px;">
-                        <canvas id="analyticsDeptBarChart"></canvas>
-                    </div>
-                </div>
 
-                <!-- Department Comparison Summary Table -->
-                <div class="dashboard-panel">
-                    <div class="panel-header">
-                        <h3 class="panel-title">Department Distribution Summary</h3>
-                    </div>
-                    <div class="table-container" style="box-shadow: none; border: none; margin-bottom: 0;">
-                        <table class="macos-table">
-                            <thead>
-                                <tr>
-                                    <th>Department Name</th>
-                                    <th>Total Students</th>
-                                    <th>Relative Share</th>
-                                    <th>Program Status</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr th:each="entry : ${departmentDistribution}">
-                                    <td><b th:text="${entry.key}">Department</b></td>
-                                    <td><span class="dept-badge" th:text="${entry.value} + ' Students'">0</span></td>
-                                    <td>
-                                        <div style="display: flex; align-items: center; gap: 8px;">
-                                            <div style="flex: 1; background: var(--bg-surface-secondary); height: 8px; border-radius: 4px; overflow: hidden;">
-                                                <div style="background: var(--accent-blue); height: 100%;"
-                                                     th:style="'background: var(--accent-blue); height: 100%; width: ' + (${totalStudents} > 0 ? (${entry.value} * 100 / ${totalStudents}) : 0) + '%;'"></div>
-                                            </div>
-                                            <span style="font-size: 11px; font-weight: 500; min-width: 36px;"
-                                                  th:text="${totalStudents} > 0 ? ${#numbers.formatDecimal(entry.value * 100.0 / totalStudents, 1, 1)} + '%' : '0%'">0%</span>
-                                        </div>
-                                    </td>
-                                    <td><span class="trend-pill positive">● Active</span></td>
-                                </tr>
-                            </tbody>
-                        </table>
+                    <div class="dashboard-panel">
+                        <div class="panel-header">
+                            <h3 class="panel-title">Department Enrollment Share</h3>
+                        </div>
+                        <div class="table-container" style="box-shadow: none; border: none;">
+                            <table class="macos-table">
+                                <thead>
+                                    <tr>
+                                        <th>Department</th>
+                                        <th>Students</th>
+                                        <th>Share</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="entry : ${departmentDistribution}">
+                                        <td><b th:text="${entry.key}">Dept</b></td>
+                                        <td><span class="dept-badge" th:text="${entry.value}">0</span></td>
+                                        <td th:text="${totalStudents} > 0 ? ${#numbers.formatDecimal(entry.value * 100.0 / totalStudents, 1, 1)} + '%' : '0%'">0%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
                 </div>
 
             </section>
 
             <!-- ===================================================================
-                 SECTION 4: REPORTS & CSV
+                 SECTION 4: REPORTS
                  =================================================================== -->
             <section class="view-section" th:classappend="${activeSection == 'reports' ? 'active' : ''}" id="section-reports">
-
-                <div class="reports-grid">
-                    <!-- Export Card -->
-                    <div class="report-card">
-                        <div>
-                            <div class="report-card-icon">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="7 10 12 15 17 10"/>
-                                    <line x1="12" x2="12" y1="15" y2="3"/>
-                                </svg>
-                            </div>
-                            <h3 style="font-size: 17px; margin: 12px 0 6px;">Export Student Directory (CSV)</h3>
-                            <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.5;">
-                                Download all active student records as an RFC 4180 compliant CSV file compatible with Microsoft Excel, Apple Numbers and Google Sheets.
-                            </p>
-                        </div>
-                        <a th:href="@{/students/export}" class="btn btn-primary" style="align-self: flex-start;">
-                            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                <polyline points="7 10 12 15 17 10"/>
-                                <line x1="12" x2="12" y1="15" y2="3"/>
-                            </svg>
-                            <span>Download Full CSV Export</span>
+                <div class="stats-grid">
+                    <div class="dashboard-panel">
+                        <h3 class="panel-title" style="margin-bottom: 8px;">Export Academic & Financial CSV</h3>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                            Download the complete student registry including Roll Numbers, Semesters, GPAs, Attendance, and Billing Balances in standard CSV format.
+                        </p>
+                        <a th:href="@{/students/export}" class="btn btn-primary">
+                            <span>Download Full Registry CSV</span>
                         </a>
                     </div>
 
-                    <!-- Import Card -->
-                    <div class="report-card">
-                        <div>
-                            <div class="report-card-icon" style="background: var(--accent-purple-subtle); color: var(--accent-purple);">
-                                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                                    <polyline points="17 8 12 3 7 8"/>
-                                    <line x1="12" x2="12" y1="3" y2="15"/>
-                                </svg>
-                            </div>
-                            <h3 style="font-size: 17px; margin: 12px 0 6px;">Import Students (CSV Batch)</h3>
-                            <p style="color: var(--text-secondary); font-size: 13px; line-height: 1.5;">
-                                Batch upload student records. Header columns: <code>Name, Email, Department, Registration Date</code>. Duplicates are safely validated.
-                            </p>
-                        </div>
-
-                        <form th:action="@{/students/import}" method="post" enctype="multipart/form-data" style="display: flex; flex-direction: column; gap: 10px;">
-                            <input type="file" name="file" accept=".csv" required class="form-input" style="padding: 6px;">
-                            <button class="btn btn-secondary" type="submit" style="align-self: flex-start;">
-                                <span>Upload & Import Records</span>
-                            </button>
+                    <div class="dashboard-panel">
+                        <h3 class="panel-title" style="margin-bottom: 8px;">Batch Import CSV Records</h3>
+                        <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
+                            Batch import student records from a CSV file. Duplicate emails and invalid entries are safely rejected.
+                        </p>
+                        <form th:action="@{/students/import}" method="post" enctype="multipart/form-data" style="display: flex; gap: 8px;">
+                            <input type="file" name="file" accept=".csv" required class="form-input" style="padding: 4px;">
+                            <button class="btn btn-secondary" type="submit">Import</button>
                         </form>
                     </div>
                 </div>
 
-                <!-- Printable Report Card -->
-                <div class="dashboard-panel">
+                <div class="dashboard-panel" style="margin-top: 20px;">
                     <div class="panel-header">
-                        <h3 class="panel-title">
-                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                                <polyline points="6 9 6 2 18 2 18 9"/>
-                                <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"/>
-                                <rect width="12" height="8" x="6" y="14"/>
-                            </svg>
-                            <span>Printable Student Report & Audit</span>
-                        </h3>
-                        <button class="btn btn-primary btn-sm" type="button" onclick="window.print()">
-                            <span>Print Official Report</span>
-                        </button>
+                        <h3 class="panel-title">Official Student Roster & Printable Report</h3>
+                        <button class="btn btn-primary btn-sm" type="button" onclick="window.print()">Print Official Report</button>
                     </div>
-                    <p style="font-size: 13px; color: var(--text-secondary); margin-bottom: 16px;">
-                        Trigger clean print layout with official university header, system timestamps, and all current student records formatted for PDF generation or physical printing.
+                    <p style="font-size: 13px; color: var(--text-secondary);">
+                        Print-ready official academic registry formatted for campus administrative filing or PDF archiving.
                     </p>
                 </div>
-
             </section>
 
             <!-- ===================================================================
                  SECTION 5: SYSTEM SETTINGS
                  =================================================================== -->
             <section class="view-section" th:classappend="${activeSection == 'settings' ? 'active' : ''}" id="section-settings">
-
                 <div class="dashboard-columns">
-                    <!-- Tech Stack Details -->
                     <div class="dashboard-panel">
-                        <div class="panel-header">
-                            <h3 class="panel-title">Technology Stack & Runtime</h3>
-                        </div>
-                        <div style="display: flex; flex-direction: column; gap: 12px; font-size: 13px;">
-                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px;">
-                                <span style="color: var(--text-secondary);">Framework</span>
-                                <b>Spring Boot 4.1.2</b>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px;">
-                                <span style="color: var(--text-secondary);">Java Version</span>
-                                <b>Java 21 (Temurin / JDK 21)</b>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px;">
-                                <span style="color: var(--text-secondary);">Database</span>
-                                <b>MySQL 8.4 Community Edition</b>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px;">
-                                <span style="color: var(--text-secondary);">Persistence</span>
-                                <b>Spring Data JPA / Hibernate</b>
-                            </div>
-                            <div style="display: flex; justify-content: space-between; border-bottom: 1px solid var(--border-subtle); padding-bottom: 6px;">
-                                <span style="color: var(--text-secondary);">Frontend Template</span>
-                                <b>Thymeleaf 3.x with macOS Design System</b>
-                            </div>
-                            <div style="display: flex; justify-content: space-between;">
-                                <span style="color: var(--text-secondary);">Containerization</span>
-                                <b>Docker & Docker Compose</b>
-                            </div>
+                        <div class="panel-header"><h3 class="panel-title">Technology Stack & Runtime</h3></div>
+                        <div style="display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
+                            <div style="display: flex; justify-content: space-between;"><span>Framework</span><b>Spring Boot 4.1.2</b></div>
+                            <div style="display: flex; justify-content: space-between;"><span>Java Runtime</span><b>Java 21 (Temurin)</b></div>
+                            <div style="display: flex; justify-content: space-between;"><span>Database</span><b>MySQL 8.4 Community Edition</b></div>
+                            <div style="display: flex; justify-content: space-between;"><span>Modules</span><b>Academic Performance & Fee Management</b></div>
                         </div>
                     </div>
 
-                    <!-- Appearance & Demo Utility -->
                     <div class="dashboard-panel">
-                        <div class="panel-header">
-                            <h3 class="panel-title">Appearance & Preferences</h3>
-                        </div>
-
-                        <div class="form-group">
-                            <label class="form-label">Dashboard Theme Appearance</label>
-                            <select class="form-input" id="settings-theme-select">
-                                <option value="light">macOS Light Theme</option>
-                                <option value="dark">macOS Dark Mode</option>
-                            </select>
-                        </div>
-
-                        <hr style="border: none; border-top: 1px solid var(--border-subtle); margin: 20px 0;">
-
-                        <div class="panel-header">
-                            <h3 class="panel-title">Sample Demonstration Data</h3>
-                        </div>
+                        <div class="panel-header"><h3 class="panel-title">Demonstration Utilities</h3></div>
                         <p style="font-size: 12px; color: var(--text-secondary); margin-bottom: 12px;">
-                            Populate the database with realistic sample student records across various departments to test charts and filters.
+                            Seed demonstration records with diverse Roll Numbers, Semesters, GPAs, Attendance, and Fee statuses.
                         </p>
                         <form th:action="@{/students/seed-demo}" method="post">
                             <button class="btn btn-secondary btn-sm" type="submit">
-                                <span>Seed Realistic Demonstration Records</span>
+                                <span>Seed Realistic Academic & Billing Records</span>
                             </button>
                         </form>
                     </div>
                 </div>
-
             </section>
 
         </main>
@@ -901,52 +798,98 @@
      MODALS & MAC OS SHEETS
      =================================================================== -->
 
-<!-- 1. Add Student Modal -->
+<!-- 1. Enroll New Student Modal -->
 <div class="modal-backdrop" id="modal-add-student">
-    <div class="macos-modal">
+    <div class="macos-modal" style="max-width: 580px;">
         <div class="modal-header">
-            <h3 class="modal-title">Enroll New Student</h3>
+            <h3 class="modal-title">Enroll Student & Create Academic Profile</h3>
             <button class="modal-close-btn" type="button" data-close-modal="modal-add-student">✕</button>
         </div>
 
         <form th:action="@{/students}" method="post" class="needs-validation">
             <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Student Full Name <span class="required">*</span></label>
-                    <input type="text" name="name" class="form-input" placeholder="e.g., Alexandra Wright" required autofocus>
-                    <div class="form-helper">Enter the legal first and last name.</div>
+                <!-- Basic Info -->
+                <div class="form-section-divider">Student Identity</div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Full Name <span class="required">*</span></label>
+                        <input type="text" name="name" class="form-input" placeholder="e.g., Alexandra Wright" required autofocus>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address <span class="required">*</span></label>
+                        <input type="email" name="email" class="form-input" placeholder="a.wright@campus.edu" required>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Email Address <span class="required">*</span></label>
-                    <input type="email" name="email" class="form-input" placeholder="e.g., a.wright@campus.edu" required>
-                    <div class="form-helper">Institutional or personal email. Must be unique.</div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Roll / Institutional ID</label>
+                        <input type="text" name="rollNumber" class="form-input" placeholder="e.g., 2026-CS-045">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Department / Program <span class="required">*</span></label>
+                        <input list="departments-list-add" name="course" class="form-input" placeholder="e.g., Computer Science" required>
+                        <datalist id="departments-list-add">
+                            <option value="Computer Science">
+                            <option value="Information Technology">
+                            <option value="Data Science">
+                            <option value="Mechanical Engineering">
+                            <option value="Electrical Engineering">
+                            <option value="Business Administration">
+                        </datalist>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Department / Course <span class="required">*</span></label>
-                    <input list="departments-list" name="course" class="form-input" placeholder="Select or type department" required>
-                    <datalist id="departments-list">
-                        <option value="Computer Science">
-                        <option value="Information Technology">
-                        <option value="Data Science">
-                        <option value="Electronics & Communication">
-                        <option value="Mechanical Engineering">
-                        <option value="Civil Engineering">
-                        <option value="Business Administration">
-                    </datalist>
-                    <div class="form-helper">Choose from standard programs or type a new one.</div>
+                <!-- Academic Info -->
+                <div class="form-section-divider">Academic Performance</div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Current Semester</label>
+                        <select name="semester" class="form-input">
+                            <option value="Semester 1">Semester 1</option>
+                            <option value="Semester 2">Semester 2</option>
+                            <option value="Semester 3">Semester 3</option>
+                            <option value="Semester 4">Semester 4</option>
+                            <option value="Semester 5">Semester 5</option>
+                            <option value="Semester 6">Semester 6</option>
+                            <option value="Semester 7">Semester 7</option>
+                            <option value="Semester 8">Semester 8</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">GPA (0.00 – 4.00)</label>
+                        <input type="number" step="0.01" min="0" max="4.0" name="gpa" class="form-input" value="3.50">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Registration Date</label>
-                    <input type="date" name="registrationDate" class="form-input" th:value="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}">
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Attendance (%)</label>
+                        <input type="number" min="0" max="100" name="attendance" class="form-input" value="90">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Enrollment Date</label>
+                        <input type="date" name="registrationDate" class="form-input" th:value="${#temporals.format(#temporals.createNow(), 'yyyy-MM-dd')}">
+                    </div>
+                </div>
+
+                <!-- Fees Info -->
+                <div class="form-section-divider">Tuition & Fee Structure</div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Total Tuition Fee ($)</label>
+                        <input type="number" step="100" min="0" name="totalFee" class="form-input" value="5000">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Initial Paid Amount ($)</label>
+                        <input type="number" step="100" min="0" name="paidFee" class="form-input" value="0">
+                    </div>
                 </div>
             </div>
 
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-close-modal="modal-add-student">Cancel</button>
-                <button class="btn btn-primary" type="submit">Create Student Record</button>
+                <button class="btn btn-primary" type="submit">Create Academic Profile</button>
             </div>
         </form>
     </div>
@@ -954,42 +897,88 @@
 
 <!-- 2. Edit Student Modal -->
 <div class="modal-backdrop" id="modal-edit-student">
-    <div class="macos-modal">
+    <div class="macos-modal" style="max-width: 580px;">
         <div class="modal-header">
-            <h3 class="modal-title">Edit Student Record</h3>
+            <h3 class="modal-title">Edit Student Profile & Records</h3>
             <button class="modal-close-btn" type="button" data-close-modal="modal-edit-student">✕</button>
         </div>
 
         <form id="form-edit-student" method="post" class="needs-validation">
             <input type="hidden" id="edit-student-id">
             <div class="modal-body">
-                <div class="form-group">
-                    <label class="form-label">Student Full Name <span class="required">*</span></label>
-                    <input type="text" name="name" id="edit-student-name" class="form-input" required>
+                <div class="form-section-divider">Identity</div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Full Name <span class="required">*</span></label>
+                        <input type="text" name="name" id="edit-student-name" class="form-input" required>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Email Address <span class="required">*</span></label>
+                        <input type="email" name="email" id="edit-student-email" class="form-input" required>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Email Address <span class="required">*</span></label>
-                    <input type="email" name="email" id="edit-student-email" class="form-input" required>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Roll Number</label>
+                        <input type="text" name="rollNumber" id="edit-student-roll" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Department <span class="required">*</span></label>
+                        <input list="departments-list-edit" name="course" id="edit-student-course" class="form-input" required>
+                        <datalist id="departments-list-edit">
+                            <option value="Computer Science">
+                            <option value="Information Technology">
+                            <option value="Data Science">
+                            <option value="Mechanical Engineering">
+                            <option value="Electrical Engineering">
+                            <option value="Business Administration">
+                        </datalist>
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Department / Course <span class="required">*</span></label>
-                    <input list="departments-list-edit" name="course" id="edit-student-course" class="form-input" required>
-                    <datalist id="departments-list-edit">
-                        <option value="Computer Science">
-                        <option value="Information Technology">
-                        <option value="Data Science">
-                        <option value="Electronics & Communication">
-                        <option value="Mechanical Engineering">
-                        <option value="Civil Engineering">
-                        <option value="Business Administration">
-                    </datalist>
+                <div class="form-section-divider">Academic Performance</div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Current Semester</label>
+                        <select name="semester" id="edit-student-sem" class="form-input">
+                            <option value="Semester 1">Semester 1</option>
+                            <option value="Semester 2">Semester 2</option>
+                            <option value="Semester 3">Semester 3</option>
+                            <option value="Semester 4">Semester 4</option>
+                            <option value="Semester 5">Semester 5</option>
+                            <option value="Semester 6">Semester 6</option>
+                            <option value="Semester 7">Semester 7</option>
+                            <option value="Semester 8">Semester 8</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">GPA (0.00 – 4.00)</label>
+                        <input type="number" step="0.01" min="0" max="4.0" name="gpa" id="edit-student-gpa" class="form-input">
+                    </div>
                 </div>
 
-                <div class="form-group">
-                    <label class="form-label">Registration Date</label>
-                    <input type="date" name="registrationDate" id="edit-student-date" class="form-input">
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Attendance (%)</label>
+                        <input type="number" min="0" max="100" name="attendance" id="edit-student-att" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Registration Date</label>
+                        <input type="date" name="registrationDate" id="edit-student-date" class="form-input">
+                    </div>
+                </div>
+
+                <div class="form-section-divider">Tuition & Fees</div>
+                <div class="form-grid-2">
+                    <div class="form-group">
+                        <label class="form-label">Total Fee ($)</label>
+                        <input type="number" step="50" min="0" name="totalFee" id="edit-student-total" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Paid Amount ($)</label>
+                        <input type="number" step="50" min="0" name="paidFee" id="edit-student-paid" class="form-input">
+                    </div>
                 </div>
             </div>
 
@@ -1001,65 +990,113 @@
     </div>
 </div>
 
-<!-- 3. View Details Modal -->
-<div class="modal-backdrop" id="modal-view-details">
-    <div class="macos-modal">
+<!-- 3. Record Payment Modal -->
+<div class="modal-backdrop" id="modal-record-payment">
+    <div class="macos-modal" style="max-width: 420px;">
         <div class="modal-header">
-            <h3 class="modal-title">Student Profile</h3>
+            <h3 class="modal-title" style="color: var(--accent-green);">Record Tuition Fee Payment</h3>
+            <button class="modal-close-btn" type="button" data-close-modal="modal-record-payment">✕</button>
+        </div>
+
+        <form id="form-record-payment" method="post">
+            <div class="modal-body">
+                <p style="font-size: 13px; margin-bottom: 12px;">
+                    Recording payment for <b id="payment-student-name">Student</b>.
+                </p>
+
+                <div style="background: var(--bg-surface-secondary); padding: 12px; border-radius: var(--radius-button); margin-bottom: 14px;">
+                    <span style="font-size: 11px; color: var(--text-secondary);">Outstanding Due Balance:</span>
+                    <div id="payment-student-due" style="font-size: 20px; font-weight: 700; color: var(--accent-red); margin-top: 2px;">$0.00</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Payment Amount ($) <span class="required">*</span></label>
+                    <input type="number" step="10" min="1" name="paymentAmount" id="payment-amount-input" class="form-input" required autofocus>
+                    <div class="form-helper">Amount to credit to the student's tuition ledger.</div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button class="btn btn-secondary" type="button" data-close-modal="modal-record-payment">Cancel</button>
+                <button class="btn btn-success" type="submit">Confirm & Post Payment</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<!-- 4. View Details Modal (Academic + Billing) -->
+<div class="modal-backdrop" id="modal-view-details">
+    <div class="macos-modal" style="max-width: 500px;">
+        <div class="modal-header">
+            <h3 class="modal-title">Student Academic & Billing Profile</h3>
             <button class="modal-close-btn" type="button" data-close-modal="modal-view-details">✕</button>
         </div>
 
-        <div class="modal-body" style="text-align: center; padding-top: 10px;">
-            <div id="detail-student-avatar" class="student-avatar" style="width: 56px; height: 56px; font-size: 20px; margin: 0 auto 12px; background: linear-gradient(135deg, #0071e3, #47a6ff);">
-                ST
-            </div>
-            <h3 id="detail-student-name" style="font-size: 18px; margin-bottom: 2px;">Student Name</h3>
-            <span id="detail-student-id" class="student-meta-id" style="font-size: 12px;">#0</span>
+        <div class="modal-body" style="text-align: center;">
+            <div id="detail-student-avatar" class="student-avatar" style="width: 52px; height: 52px; font-size: 18px; margin: 0 auto 10px; background: linear-gradient(135deg, #0071e3, #47a6ff);">ST</div>
+            <h3 id="detail-student-name" style="font-size: 17px; margin-bottom: 2px;">Student Name</h3>
+            <span id="detail-student-roll" class="student-meta-roll" style="font-size: 12px;">2026-CS-001</span>
 
-            <div style="margin-top: 20px; text-align: left; background: var(--bg-surface-secondary); padding: 14px; border-radius: var(--radius-input); display: flex; flex-direction: column; gap: 10px; font-size: 13px;">
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--text-secondary);">Email:</span>
-                    <b id="detail-student-email">email@campus.edu</b>
+            <!-- Academic Profile Card -->
+            <div style="margin-top: 16px; text-align: left; background: var(--bg-surface-secondary); padding: 14px; border-radius: var(--radius-card);">
+                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px;">Academic Standing</div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Program & Semester:</span>
+                    <b><span id="detail-student-dept">CSE</span> — <span id="detail-student-sem">Sem 1</span></b>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Cumulative GPA:</span>
+                    <b id="detail-student-gpa" style="color: var(--accent-purple);">3.85</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Attendance Rate:</span>
+                    <b id="detail-student-att" style="color: var(--accent-green);">92%</b>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--text-secondary);">Department:</span>
-                    <b id="detail-student-dept">Computer Science</b>
+                    <span style="color: var(--text-secondary);">Academic Standing:</span>
+                    <span class="trend-pill positive" id="detail-student-standing">Dean's List</span>
+                </div>
+            </div>
+
+            <!-- Billing Profile Card -->
+            <div style="margin-top: 12px; text-align: left; background: var(--bg-surface-secondary); padding: 14px; border-radius: var(--radius-card);">
+                <div style="font-size: 11px; font-weight: 700; text-transform: uppercase; color: var(--text-tertiary); margin-bottom: 8px;">Tuition & Fee Status</div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Total Tuition Fee:</span>
+                    <b id="detail-student-total-fee">$5,000.00</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Amount Paid:</span>
+                    <b id="detail-student-paid-fee" style="color: var(--accent-green);">$3,500.00</b>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 6px;">
+                    <span style="color: var(--text-secondary);">Outstanding Due:</span>
+                    <b id="detail-student-due-fee" style="color: var(--accent-red);">$1,500.00</b>
                 </div>
                 <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--text-secondary);">Enrollment Date:</span>
-                    <span id="detail-student-date">2026-11-11</span>
-                </div>
-                <div style="display: flex; justify-content: space-between;">
-                    <span style="color: var(--text-secondary);">Status:</span>
-                    <span class="trend-pill positive">● Enrolled</span>
+                    <span style="color: var(--text-secondary);">Billing Status:</span>
+                    <span class="trend-pill warning" id="detail-student-fee-status">PARTIAL</span>
                 </div>
             </div>
         </div>
 
         <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-close-modal="modal-view-details">Close</button>
-            <button class="btn btn-primary" type="button" id="detail-edit-link">Edit Details</button>
+            <button class="btn btn-success" type="button" id="detail-pay-btn">Post Payment</button>
         </div>
     </div>
 </div>
 
-<!-- 4. Delete Single Student Confirmation Modal -->
+<!-- 5. Delete Confirm Modal -->
 <div class="modal-backdrop" id="modal-confirm-delete">
     <div class="macos-modal" style="max-width: 400px;">
         <div class="modal-header">
             <h3 class="modal-title" style="color: var(--accent-red);">Delete Student Record</h3>
             <button class="modal-close-btn" type="button" data-close-modal="modal-confirm-delete">✕</button>
         </div>
-
         <div class="modal-body">
-            <p style="font-size: 13px; line-height: 1.5; color: var(--text-primary); margin-bottom: 12px;">
-                Are you sure you want to delete <b id="delete-modal-student-name">this student</b>?
-            </p>
-            <p style="font-size: 12px; color: var(--text-secondary);">
-                This action will permanently delete the record from the MySQL database and cannot be undone.
-            </p>
+            <p style="font-size: 13px;">Are you sure you want to permanently delete <b id="delete-modal-student-name">this student</b>?</p>
         </div>
-
         <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-close-modal="modal-confirm-delete">Cancel</button>
             <a id="confirm-delete-link" href="#" class="btn btn-danger">Delete Record</a>
@@ -1067,23 +1104,16 @@
     </div>
 </div>
 
-<!-- 5. Bulk Delete Confirmation Modal -->
+<!-- 6. Bulk Delete Modal -->
 <div class="modal-backdrop" id="modal-bulk-delete">
     <div class="macos-modal" style="max-width: 420px;">
         <div class="modal-header">
             <h3 class="modal-title" style="color: var(--accent-red);">Confirm Bulk Deletion</h3>
             <button class="modal-close-btn" type="button" data-close-modal="modal-bulk-delete">✕</button>
         </div>
-
         <div class="modal-body">
-            <p style="font-size: 14px; margin-bottom: 8px;">
-                You have selected <b id="bulk-delete-modal-count">0</b> student records for deletion.
-            </p>
-            <p style="font-size: 12px; color: var(--text-secondary);">
-                Are you certain? All selected entries will be permanently removed from the MySQL database.
-            </p>
+            <p style="font-size: 13px;">Delete all <b id="bulk-delete-modal-count">0</b> selected student records?</p>
         </div>
-
         <div class="modal-footer">
             <button class="btn btn-secondary" type="button" data-close-modal="modal-bulk-delete">Cancel</button>
             <button class="btn btn-danger" type="button" id="confirm-bulk-delete-btn">Permanently Delete</button>
@@ -1091,55 +1121,36 @@
     </div>
 </div>
 
-<!-- 6. Import CSV Modal -->
+<!-- 7. CSV Import Modal -->
 <div class="modal-backdrop" id="modal-import-csv">
     <div class="macos-modal">
         <div class="modal-header">
             <h3 class="modal-title">Import CSV Student Records</h3>
             <button class="modal-close-btn" type="button" data-close-modal="modal-import-csv">✕</button>
         </div>
-
         <form th:action="@{/students/import}" method="post" enctype="multipart/form-data">
             <div class="modal-body">
-                <div class="dropzone-area" onclick="document.getElementById('modal-csv-file-input').click()">
-                    <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="color: var(--accent-blue); margin-bottom: 8px;">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
-                        <polyline points="17 8 12 3 7 8"/>
-                        <line x1="12" x2="12" y1="3" y2="15"/>
-                    </svg>
-                    <div style="font-weight: 600; font-size: 13px; margin-bottom: 4px;">Choose CSV file or drag here</div>
-                    <div style="font-size: 11px; color: var(--text-tertiary);">Accepted file type: .csv (RFC 4180)</div>
-                </div>
-
-                <input type="file" id="modal-csv-file-input" name="file" accept=".csv" required style="display: none;"
-                       onchange="if(this.files[0]) alert('Selected: ' + this.files[0].name);">
-
-                <div style="margin-top: 14px; font-size: 11px; color: var(--text-secondary);">
-                    <b>Expected Columns:</b> <code>Name, Email, Department, Registration Date (optional)</code>
-                </div>
+                <input type="file" name="file" accept=".csv" required class="form-input">
             </div>
-
             <div class="modal-footer">
                 <button class="btn btn-secondary" type="button" data-close-modal="modal-import-csv">Cancel</button>
-                <button class="btn btn-primary" type="submit">Start CSV Import</button>
+                <button class="btn btn-primary" type="submit">Upload CSV</button>
             </div>
         </form>
     </div>
 </div>
 
-<!-- Hidden Bulk Delete Form -->
 <form id="bulk-delete-form" th:action="@{/students/bulk-delete}" method="post" style="display: none;">
     <div id="bulk-delete-ids-container"></div>
 </form>
 
-<!-- Embed Actual Database Statistics into Client Window for Chart.js -->
 <script th:inline="javascript">
     /*<![CDATA[*/
     window.DEPARTMENT_DATA = /*[[${departmentDistribution}]]*/ {};
+    window.FEE_DATA = /*[[${feeStatusDistribution}]]*/ {};
     /*]]>*/
 </script>
 
-<!-- macOS Dashboard JS Controller -->
 <script th:src="@{/js/macos-dashboard.js}"></script>
 
 </body>
