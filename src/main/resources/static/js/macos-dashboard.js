@@ -1,7 +1,7 @@
 /**
  * macOS Dashboard Interactive Controller
- * Supports Academic Performance, Tuition Fees, Navigation, Table Filtering,
- * Multi-Selection, Sorting, Pagination, Modals, Real-time Validation & Charts.
+ * Supports 10.0 CGPA Scale, Indian Rupee (₹) Tuition Fees, Navigation,
+ * Table Filtering, Multi-Selection, Sorting, Pagination, Modals & Charts.
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -485,7 +485,7 @@ function initStudentTable() {
 }
 
 /* ==========================================================================
-   7. Modals & Sheets Controller
+   7. Modals Controller
    ========================================================================== */
 function initModals() {
     document.querySelectorAll('.modal-backdrop').forEach(backdrop => {
@@ -517,7 +517,7 @@ function initModals() {
         });
     });
 
-    // View Details Modal
+    // View Details Modal (Academic + Billing)
     document.querySelectorAll('.btn-view-details').forEach(btn => {
         btn.addEventListener('click', () => {
             const row = btn.closest('tr');
@@ -528,15 +528,15 @@ function initModals() {
             const email = row.getAttribute('data-email');
             const dept = row.getAttribute('data-dept');
             const roll = row.getAttribute('data-roll') || 'N/A';
-            const sem = row.getAttribute('data-sem') || 'Semester 1';
-            const gpa = row.getAttribute('data-gpa') || '3.50';
-            const att = row.getAttribute('data-att') || '90';
-            const status = row.getAttribute('data-status') || 'Good Standing';
-            const total = parseFloat(row.getAttribute('data-total') || '5000').toFixed(2);
-            const paid = parseFloat(row.getAttribute('data-paid') || '0').toFixed(2);
-            const due = parseFloat(row.getAttribute('data-due') || '0').toFixed(2);
-            const feeStatus = row.getAttribute('data-fee') || 'DUE';
-            const date = row.getAttribute('data-date') || 'Active';
+            const sem = row.getAttribute('data-sem') || 'Semester 4';
+            const gpa = row.getAttribute('data-gpa') || '8.50';
+            const att = row.getAttribute('data-att') || '92';
+            const status = row.getAttribute('data-status') || 'First Class';
+            const total = parseFloat(row.getAttribute('data-total') || '85000').toLocaleString('en-IN');
+            const paid = parseFloat(row.getAttribute('data-paid') || '85000').toLocaleString('en-IN');
+            const due = parseFloat(row.getAttribute('data-due') || '0').toLocaleString('en-IN');
+            const rawDue = row.getAttribute('data-due') || '0';
+            const feeStatus = row.getAttribute('data-fee') || 'PAID';
 
             document.getElementById('detail-student-id').textContent = '#' + id;
             document.getElementById('detail-student-name').textContent = name;
@@ -544,14 +544,13 @@ function initModals() {
             document.getElementById('detail-student-dept').textContent = dept;
             document.getElementById('detail-student-roll').textContent = roll;
             document.getElementById('detail-student-sem').textContent = sem;
-            document.getElementById('detail-student-gpa').textContent = gpa;
+            document.getElementById('detail-student-gpa').textContent = gpa + ' / 10.0';
             document.getElementById('detail-student-att').textContent = att + '%';
             document.getElementById('detail-student-standing').textContent = status;
-            document.getElementById('detail-student-total-fee').textContent = '$' + total;
-            document.getElementById('detail-student-paid-fee').textContent = '$' + paid;
-            document.getElementById('detail-student-due-fee').textContent = '$' + due;
+            document.getElementById('detail-student-total-fee').textContent = '₹' + total;
+            document.getElementById('detail-student-paid-fee').textContent = '₹' + paid;
+            document.getElementById('detail-student-due-fee').textContent = '₹' + due;
             document.getElementById('detail-student-fee-status').textContent = feeStatus;
-            document.getElementById('detail-student-date').textContent = date;
 
             const avatar = document.getElementById('detail-student-avatar');
             if (avatar) {
@@ -563,7 +562,7 @@ function initModals() {
             if (payBtn) {
                 payBtn.onclick = () => {
                     closeModal('modal-view-details');
-                    openPaymentModal(id, name, due);
+                    openPaymentModal(id, name, rawDue);
                 };
             }
 
@@ -627,7 +626,7 @@ function initModals() {
 }
 
 /* ==========================================================================
-   8. Record Payment Modal
+   8. Record Payment Modal (₹ INR)
    ========================================================================== */
 function initPaymentModal() {
     document.querySelectorAll('.btn-record-payment').forEach(btn => {
@@ -648,11 +647,11 @@ function openPaymentModal(id, name, due) {
 
     form.action = `/students/payment/${id}`;
     document.getElementById('payment-student-name').textContent = name;
-    document.getElementById('payment-student-due').textContent = '$' + parseFloat(due).toFixed(2);
+    document.getElementById('payment-student-due').textContent = '₹' + parseFloat(due).toLocaleString('en-IN', { minimumFractionDigits: 2 });
 
     const amountInput = document.getElementById('payment-amount-input');
     if (amountInput) {
-        amountInput.value = parseFloat(due) > 0 ? parseFloat(due) : 500;
+        amountInput.value = parseFloat(due) > 0 ? parseFloat(due) : 10000;
         amountInput.max = due;
     }
 
@@ -680,7 +679,6 @@ function initFormValidation() {
     document.querySelectorAll('.needs-validation').forEach(form => {
         const nameInput = form.querySelector('[name="name"]');
         const emailInput = form.querySelector('[name="email"]');
-        const courseInput = form.querySelector('[name="course"]');
 
         const validateName = () => {
             if (!nameInput) return true;

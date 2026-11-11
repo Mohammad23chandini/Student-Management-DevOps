@@ -46,7 +46,7 @@ public class StudentController {
         model.addAttribute("recentActivities", studentService.getRecentActivities());
         model.addAttribute("recentStudents", studentService.getRecentlyAddedStudents(5));
 
-        // Academic & Fee KPIs
+        // Academic (10.0 Scale) & INR Financial KPIs
         model.addAttribute("totalFeesCollected", studentService.getTotalFeesCollected());
         model.addAttribute("totalFeesPending", studentService.getTotalFeesPending());
         model.addAttribute("collectionRate", studentService.getCollectionRate());
@@ -153,7 +153,7 @@ public class StudentController {
 
         studentService.saveStudent(student);
 
-        redirectAttributes.addFlashAttribute("successMessage", "Student '" + trimmedName + "' enrolled successfully with academic & fee profile!");
+        redirectAttributes.addFlashAttribute("successMessage", "Student '" + trimmedName + "' enrolled successfully with CGPA & INR fee ledger!");
         return "redirect:/students";
     }
 
@@ -246,7 +246,7 @@ public class StudentController {
                                 @RequestParam Double paymentAmount,
                                 RedirectAttributes redirectAttributes) {
         if (paymentAmount == null || paymentAmount <= 0) {
-            redirectAttributes.addFlashAttribute("errorMessage", "Please provide a valid payment amount greater than $0.");
+            redirectAttributes.addFlashAttribute("errorMessage", "Please provide a valid payment amount greater than ₹0.");
             return "redirect:/students";
         }
 
@@ -257,7 +257,7 @@ public class StudentController {
         }
 
         studentService.recordPayment(id, paymentAmount);
-        redirectAttributes.addFlashAttribute("successMessage", String.format("Payment of $%.2f successfully credited to %s.", paymentAmount, student.getName()));
+        redirectAttributes.addFlashAttribute("successMessage", String.format("Fee payment of ₹%.2f successfully credited to %s.", paymentAmount, student.getName()));
         return "redirect:/students";
     }
 
@@ -355,14 +355,14 @@ public class StudentController {
     @PostMapping("/students/seed-demo")
     public String seedDemoStudents(RedirectAttributes redirectAttributes) {
         Object[][] demoData = {
-                {"2026-CS-101", "Alexandre Chen", "alex.chen@campus.edu", "Computer Science", "Semester 6", 3.92, 96, 5000.0, 5000.0},
-                {"2026-DS-102", "Sophia Rodriguez", "sophia.r@campus.edu", "Data Science", "Semester 4", 3.88, 94, 5200.0, 3500.0},
-                {"2026-IT-103", "Marcus Vance", "marcus.vance@campus.edu", "Information Technology", "Semester 2", 3.45, 88, 4800.0, 4800.0},
-                {"2026-ME-104", "Elena Rostova", "elena.rostova@campus.edu", "Mechanical Engineering", "Semester 8", 3.75, 91, 5500.0, 2000.0},
-                {"2026-EE-105", "Devon Miller", "d.miller@campus.edu", "Electrical Engineering", "Semester 5", 2.85, 74, 5000.0, 1500.0},
-                {"2026-BA-106", "Aisha Patel", "aisha.patel@campus.edu", "Business Administration", "Semester 3", 3.95, 98, 4500.0, 4500.0},
-                {"2026-CS-107", "Liam O'Connor", "liam.oc@campus.edu", "Computer Science", "Semester 1", 3.20, 85, 5000.0, 0.0},
-                {"2026-DS-108", "Maya Lin", "maya.lin@campus.edu", "Data Science", "Semester 7", 3.82, 93, 5200.0, 5200.0}
+                {"23CSE001", "Lakshmi Prasanna", "lakshmi.p@campus.edu", "Computer Science", "Semester 6", 8.85, 94, 85000.0, 85000.0},
+                {"23CSE015", "Jahanvi Sharma", "jahanvi.s@campus.edu", "Computer Science", "Semester 6", 9.20, 96, 85000.0, 50000.0},
+                {"23CSE045", "Chandini Mohammad", "mohammadchandini.23.cse@anits.edu.in", "Computer Science", "Semester 6", 9.55, 98, 85000.0, 85000.0},
+                {"23IT022", "Marcus Vance", "marcus.v@campus.edu", "Information Technology", "Semester 4", 8.40, 88, 75000.0, 75000.0},
+                {"23ME034", "Elena Rostova", "elena.r@campus.edu", "Mechanical Engineering", "Semester 8", 8.95, 91, 80000.0, 40000.0},
+                {"23EE019", "Devon Miller", "devon.m@campus.edu", "Electrical Engineering", "Semester 2", 7.45, 82, 75000.0, 30000.0},
+                {"23BA008", "Aisha Patel", "aisha.p@campus.edu", "Business Administration", "Semester 4", 9.10, 97, 85000.0, 85000.0},
+                {"23DS011", "Maya Lin", "maya.l@campus.edu", "Data Science", "Semester 6", 9.35, 95, 90000.0, 90000.0}
         };
 
         int count = 0;
@@ -385,7 +385,7 @@ public class StudentController {
             }
         }
 
-        redirectAttributes.addFlashAttribute("successMessage", "Seeded " + count + " academic & billing records across programs.");
+        redirectAttributes.addFlashAttribute("successMessage", "Seeded " + count + " academic & INR fee records (10.0 CGPA scale).");
         return "redirect:/students";
     }
 }

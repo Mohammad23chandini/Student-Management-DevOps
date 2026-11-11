@@ -4,6 +4,7 @@ import com.example.demo.model.ActivityLog;
 import com.example.demo.model.Student;
 import com.example.demo.repository.ActivityLogRepository;
 import com.example.demo.repository.StudentRepository;
+import jakarta.annotation.PostConstruct;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -28,6 +29,89 @@ public class StudentService {
     public StudentService(StudentRepository studentRepository, ActivityLogRepository activityLogRepository) {
         this.studentRepository = studentRepository;
         this.activityLogRepository = activityLogRepository;
+    }
+
+    /**
+     * Automatically ensures existing students in the database have realistic,
+     * differentiated Indian university CGPAs (10.0 scale) and Rupee tuition fee balances.
+     */
+    @PostConstruct
+    @Transactional
+    public void normalizeExistingStudents() {
+        List<Student> students = studentRepository.findAll();
+        if (students.isEmpty()) return;
+
+        // Differentiated academic & fee profiles (10.0 scale GPA, Rupee fees)
+        double[] sampleGpas = {9.55, 9.20, 8.85, 8.40, 7.90, 9.10, 8.65, 7.45, 8.95, 9.35, 8.15, 7.80};
+        int[] sampleAttendance = {98, 95, 92, 88, 84, 96, 91, 78, 93, 97, 89, 86};
+        double[] sampleTotalFees = {85000.0, 85000.0, 85000.0, 75000.0, 80000.0, 85000.0, 75000.0, 80000.0, 85000.0, 90000.0, 75000.0, 85000.0};
+        double[] samplePaidFees = {85000.0, 50000.0, 85000.0, 75000.0, 40000.0, 85000.0, 30000.0, 80000.0, 85000.0, 90000.0, 50000.0, 0.0};
+        String[] sampleSemesters = {"Semester 6", "Semester 6", "Semester 6", "Semester 4", "Semester 2", "Semester 8", "Semester 4", "Semester 2", "Semester 6", "Semester 8", "Semester 4", "Semester 2"};
+
+        boolean updatedAny = false;
+        for (int i = 0; i < students.size(); i++) {
+            Student s = students.get(i);
+            boolean needsUpdate = false;
+
+            // If GPA is in the old 4.0 scale or null, assign differentiated 10.0 scale GPA
+            if (s.getGpa() == null || s.getGpa() <= 4.0) {
+                s.setGpa(sampleGpas[i % sampleGpas.length]);
+                needsUpdate = true;
+            }
+
+            // If attendance is null or old default
+            if (s.getAttendance() == null) {
+                s.setAttendance(sampleAttendance[i % sampleAttendance.length]);
+                needsUpdate = true;
+            }
+
+            // If semester is null
+            if (s.getSemester() == null || s.getSemester().trim().isEmpty()) {
+                s.setSemester(sampleSemesters[i % sampleSemesters.length]);
+                needsUpdate = true;
+            }
+
+            // If total fee is in dollars or null (less than 10,000)
+            if (s.getTotalFee() == null || s.getTotalFee() < 10000.0) {
+                s.setTotalFee(sampleTotalFees[i % sampleTotalFees.length]);
+                s.setPaidFee(samplePaidFees[i % samplePaidFees.length]);
+                needsUpdate = true;
+            }
+
+            // Roll number formatting
+            if (s.getRollNumber() == null || s.getRollNumber().startsWith("STU-")) {
+                if (s.getEmail().toLowerCase().contains("chandini") || s.getName().toLowerCase().contains("chand")) {
+                    s.setRollNumber("23CSE045");
+                    s.setGpa(9.55); // Top distinction for Chandini
+                    s.setSemester("Semester 6");
+                    s.setAttendance(98);
+                } else if (s.getName().toLowerCase().contains("lakshmi")) {
+                    s.setRollNumber("23CSE001");
+                    s.setGpa(8.85);
+                    s.setSemester("Semester 6");
+                    s.setAttendance(94);
+                } else if (s.getName().toLowerCase().contains("jahanvi")) {
+                    s.setRollNumber("23CSE015");
+                    s.setGpa(9.20);
+                    s.setSemester("Semester 6");
+                    s.setAttendance(96);
+                } else {
+                    String deptCode = s.getCourse() != null && s.getCourse().length() >= 2 ? s.getCourse().substring(0, 2).toUpperCase() : "CS";
+                    s.setRollNumber("23" + deptCode + String.format("%03d", (i + 1) * 7 % 100));
+                }
+                needsUpdate = true;
+            }
+
+            if (needsUpdate) {
+                s.recalculateFeeStatus();
+                studentRepository.save(s);
+                updatedAny = true;
+            }
+        }
+
+        if (updatedAny) {
+            logActivity("SYSTEM", "Synchronized existing student records with 10.0 CGPA scale and INR tuition fee structure", "System");
+        }
     }
 
     public List<Student> getAllStudents() {
@@ -88,7 +172,7 @@ public class StudentService {
 
             student.recalculateFeeStatus();
             studentRepository.save(student);
-            logActivity("UPDATE", "Updated academic & fee records for " + student.getName(), student.getName());
+            logActivity("UPDATE", "Updated academic (CGPA: " + student.getGpa() + ") & fee profile for " + student.getName(), student.getName());
         }
     }
 
@@ -100,7 +184,7 @@ public class StudentService {
             student.setPaidFee(currentPaid + paymentAmount);
             student.recalculateFeeStatus();
             studentRepository.save(student);
-            logActivity("PAYMENT", String.format("Recorded payment of $%.2f for %s (Remaining Due: $%.2f)",
+            logActivity("PAYMENT", String.format("Recorded fee payment of ₹%.2f for %s (Remaining Due: ₹%.2f)",
                     paymentAmount, student.getName(), student.getDueFee()), student.getName());
         }
     }
@@ -191,15 +275,15 @@ public class StudentService {
 
     public double getAverageGpa() {
         List<Student> students = studentRepository.findAll();
-        if (students.isEmpty()) return 3.5;
-        double avg = students.stream().mapToDouble(Student::getGpa).average().orElse(3.5);
+        if (students.isEmpty()) return 8.50;
+        double avg = students.stream().mapToDouble(Student::getGpa).average().orElse(8.50);
         return Math.round(avg * 100.0) / 100.0;
     }
 
     public int getAverageAttendance() {
         List<Student> students = studentRepository.findAll();
-        if (students.isEmpty()) return 90;
-        return (int) Math.round(students.stream().mapToInt(Student::getAttendance).average().orElse(90.0));
+        if (students.isEmpty()) return 92;
+        return (int) Math.round(students.stream().mapToInt(Student::getAttendance).average().orElse(92.0));
     }
 
     public Map<String, Long> getFeeStatusDistribution() {
@@ -221,7 +305,7 @@ public class StudentService {
     public List<ActivityLog> getRecentActivities() {
         List<ActivityLog> logs = activityLogRepository.findTop15ByOrderByTimestampDesc();
         if (logs.isEmpty()) {
-            ActivityLog initial = new ActivityLog("SYSTEM", "System initialized with Academic & Fee modules", "System");
+            ActivityLog initial = new ActivityLog("SYSTEM", "System initialized with 10.0 CGPA & INR Tuition Fee modules", "System");
             activityLogRepository.save(initial);
             logs = List.of(initial);
         }
@@ -238,7 +322,7 @@ public class StudentService {
 
     public void exportStudentsToCsv(Writer writer) throws IOException {
         PrintWriter pw = new PrintWriter(writer);
-        pw.println("ID,Roll Number,Name,Email,Department,Semester,GPA,Attendance %,Total Fee,Paid Fee,Due Balance,Fee Status,Registration Date");
+        pw.println("ID,Roll Number,Name,Email,Department,Semester,CGPA (10.0 Scale),Attendance %,Total Fee (INR),Paid Fee (INR),Due Balance (INR),Fee Status,Registration Date");
 
         List<Student> students = studentRepository.findAll();
         for (Student s : students) {
@@ -312,7 +396,6 @@ public class StudentService {
                     continue;
                 }
 
-                // Format can be: Name, Email, Course... OR ID, RollNo, Name, Email, Course...
                 int nameIdx = 0;
                 int emailIdx = 1;
                 int courseIdx = 2;

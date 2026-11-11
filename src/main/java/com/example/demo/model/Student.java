@@ -23,28 +23,28 @@ public class Student {
     @Column(name = "registration_date")
     private LocalDate registrationDate;
 
-    // Academic Details
+    // Academic Details (10.0 CGPA Scale)
     @Column(name = "roll_number")
     private String rollNumber;
 
     @Column(name = "semester")
-    private String semester; // e.g., "Semester 1" to "Semester 8"
+    private String semester; // "Semester 1" to "Semester 8"
 
     @Column(name = "gpa")
-    private Double gpa; // e.g., 3.85
+    private Double gpa; // Scale 0.00 – 10.00 (e.g., 9.25, 8.80)
 
     @Column(name = "attendance")
-    private Integer attendance; // e.g., 92%
+    private Integer attendance; // Percentage 0 – 100%
 
     @Column(name = "academic_status")
-    private String academicStatus; // "Good Standing", "Dean's List", "Probation"
+    private String academicStatus; // "Distinction", "First Class", "Second Class", "Academic Warning"
 
-    // Fee & Billing Details
+    // Fee & Billing Details (In Indian Rupees ₹)
     @Column(name = "total_fee")
-    private Double totalFee; // e.g., 5000.0
+    private Double totalFee; // e.g., 85000.0 (₹85,000)
 
     @Column(name = "paid_fee")
-    private Double paidFee; // e.g., 3500.0
+    private Double paidFee; // e.g., 85000.0 or 50000.0
 
     @Column(name = "fee_status")
     private String feeStatus; // "PAID", "PARTIAL", "DUE", "OVERDUE"
@@ -83,33 +83,45 @@ public class Student {
 
     private void initDefaults() {
         if (this.rollNumber == null || this.rollNumber.trim().isEmpty()) {
-            this.rollNumber = "STU-" + (id != null ? String.format("%04d", id) : "2026");
+            this.rollNumber = "23CSE" + (id != null ? String.format("%03d", id % 1000) : "001");
         }
         if (this.semester == null || this.semester.trim().isEmpty()) {
-            this.semester = "Semester 1";
+            this.semester = "Semester 4";
         }
         if (this.gpa == null) {
-            this.gpa = 3.50;
+            this.gpa = 8.50;
         }
         if (this.attendance == null) {
-            this.attendance = 90;
+            this.attendance = 92;
         }
         if (this.academicStatus == null || this.academicStatus.trim().isEmpty()) {
-            this.academicStatus = (this.gpa >= 3.8) ? "Dean's List" : (this.gpa < 2.0 ? "Probation" : "Good Standing");
+            updateAcademicStatusFromGpa(this.gpa);
         }
         if (this.totalFee == null || this.totalFee <= 0) {
-            this.totalFee = 5000.0;
+            this.totalFee = 85000.0;
         }
         if (this.paidFee == null) {
-            this.paidFee = 0.0;
+            this.paidFee = 85000.0;
         }
         if (this.feeDueDate == null) {
             this.feeDueDate = LocalDate.now().plusMonths(2);
         }
     }
 
+    public void updateAcademicStatusFromGpa(double val) {
+        if (val >= 9.0) {
+            this.academicStatus = "Distinction";
+        } else if (val >= 7.5) {
+            this.academicStatus = "First Class";
+        } else if (val >= 6.0) {
+            this.academicStatus = "Second Class";
+        } else {
+            this.academicStatus = "Academic Warning";
+        }
+    }
+
     public void recalculateFeeStatus() {
-        double total = (totalFee != null) ? totalFee : 5000.0;
+        double total = (totalFee != null) ? totalFee : 85000.0;
         double paid = (paidFee != null) ? paidFee : 0.0;
 
         if (paid >= total) {
@@ -167,7 +179,7 @@ public class Student {
     }
 
     public String getRollNumber() {
-        return rollNumber != null ? rollNumber : ("STU-" + (id != null ? id : "001"));
+        return rollNumber != null ? rollNumber : ("23CSE" + (id != null ? String.format("%03d", id % 1000) : "001"));
     }
 
     public void setRollNumber(String rollNumber) {
@@ -175,7 +187,7 @@ public class Student {
     }
 
     public String getSemester() {
-        return semester != null ? semester : "Semester 1";
+        return semester != null ? semester : "Semester 4";
     }
 
     public void setSemester(String semester) {
@@ -183,20 +195,18 @@ public class Student {
     }
 
     public Double getGpa() {
-        return gpa != null ? gpa : 3.50;
+        return gpa != null ? gpa : 8.50;
     }
 
     public void setGpa(Double gpa) {
         this.gpa = gpa;
         if (gpa != null) {
-            if (gpa >= 3.8) this.academicStatus = "Dean's List";
-            else if (gpa < 2.0) this.academicStatus = "Probation";
-            else this.academicStatus = "Good Standing";
+            updateAcademicStatusFromGpa(gpa);
         }
     }
 
     public Integer getAttendance() {
-        return attendance != null ? attendance : 90;
+        return attendance != null ? attendance : 92;
     }
 
     public void setAttendance(Integer attendance) {
@@ -204,7 +214,7 @@ public class Student {
     }
 
     public String getAcademicStatus() {
-        return academicStatus != null ? academicStatus : "Good Standing";
+        return academicStatus != null ? academicStatus : "First Class";
     }
 
     public void setAcademicStatus(String academicStatus) {
@@ -212,7 +222,7 @@ public class Student {
     }
 
     public Double getTotalFee() {
-        return totalFee != null ? totalFee : 5000.0;
+        return totalFee != null ? totalFee : 85000.0;
     }
 
     public void setTotalFee(Double totalFee) {
@@ -221,7 +231,7 @@ public class Student {
     }
 
     public Double getPaidFee() {
-        return paidFee != null ? paidFee : 0.0;
+        return paidFee != null ? paidFee : 85000.0;
     }
 
     public void setPaidFee(Double paidFee) {

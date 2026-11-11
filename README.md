@@ -23,27 +23,31 @@ The user interface follows the **Apple Human Interface Guidelines (macOS Sequoia
 - **Dark / Light Mode**: Seamless theme switcher with live icon changes and `localStorage` state persistence.
 - **Collapsible Sidebar**: Compact icon-only view or expanded full navigation menu with live database connection telemetry.
 
-### 📚 2. Academic Performance Tracking
-- **Roll Number / Student ID**: Official institutional identifier (e.g., `2026-CS-045`).
+### 📚 2. Academic Performance Tracking (10.0 CGPA Scale)
+- **Roll Number / Student ID**: Official institutional roll number (e.g., `23CSE045`, `23CSE015`).
 - **Semester & Year Level**: Track student academic progression from `Semester 1` through `Semester 8`.
-- **Cumulative GPA & Standing**: Live GPA tracking (scale 0.00 – 4.00) with automatic honor recognitions (`Dean's List`, `Good Standing`, `Probation`).
+- **Cumulative CGPA & Academic Standing**: Live 10.0 CGPA scale tracking (0.00 – 10.00) with automatic Indian university honor classifications:
+  - `🌟 Distinction` — CGPA >= 9.00
+  - `🟢 First Class` — CGPA 7.50 – 8.99
+  - `🟡 Second Class` — CGPA 6.00 – 7.49
+  - `🔴 Academic Warning` — CGPA < 6.00
 - **Attendance Monitoring**: Percentage tracker with color-coded alerts (`🟢 >= 85%`, `🟠 75%–84%`, `🔴 < 75% Low Attendance`).
 
-### 💳 3. Tuition & Fee Management
-- **Tuition Ledger**: Track Total Tuition Invoiced, Paid Amount, and Remaining Due Balances.
+### 💳 3. Tuition & Fee Management (Indian Rupees ₹)
+- **Tuition Ledger in ₹ INR**: Track Total Tuition Invoiced (e.g. ₹85,000), Paid Amount, and Remaining Due Balances in Indian Rupees.
 - **Dynamic Fee Status**:
-  - `🟢 Paid` — Full tuition cleared
+  - `🟢 Paid` — Full tuition cleared (₹0 balance)
   - `🟠 Partial` — Partial payment credited with outstanding balance
   - `🔴 Due / Overdue` — Pending balance with deadline tracking
-- **One-Click Payment Posting**: In-place modal to post tuition payments with instant balance recalculation and persistent audit logging.
-- **Financial Collection KPIs**: Real-time campus fee realization rate progress bar and outstanding revenue analytics.
+- **One-Click Payment Posting**: In-place modal to post tuition fee payments in ₹ with instant balance recalculation and persistent audit logging.
+- **Financial Collection KPIs**: Real-time campus fee realization rate progress bar and outstanding revenue analytics in Indian Rupees.
 
 ### 📊 4. Dynamic Dashboard Overview
 - **Real-Time Database Statistics**:
   - **Enrolled Students**: Live count from MySQL across academic departments.
-  - **Campus Academic GPA**: Average institutional GPA and attendance rate.
-  - **Tuition Fees Collected**: Total payments received and collection realization rate.
-  - **Outstanding Tuition Dues**: Real-time pending balance indicator.
+  - **Campus Average CGPA**: Institutional average on the 10.0 scale (e.g., `8.50 / 10.0`) and campus attendance rate.
+  - **Tuition Fees Collected (₹)**: Total payments received in INR and collection realization rate.
+  - **Outstanding Tuition Dues (₹)**: Real-time pending balance indicator.
 - **Department & Fee Breakdown Charts**: Interactive Chart.js Donut Charts with percentage distributions and automatic SVG fallback for offline environments.
 - **Persistent Activity Audit Stream**: Real audit events recorded directly into MySQL (`activity_logs` table) upon student creation, update, payment posting, deletion, and CSV import.
 
@@ -51,15 +55,15 @@ The user interface follows the **Apple Human Interface Guidelines (macOS Sequoia
 - **Modern Data Table**:
   - Dynamic initials avatars styled with a curated Apple pastel color palette.
   - Roll number, full name, institutional email, department, semester.
-  - Color-coded GPA, attendance, and fee status badges.
+  - Color-coded 10.0 CGPA, attendance, and ₹ INR fee status badges.
 - **Instant Live Search**: Client-side filtering across student name, email, department, and roll number in real time.
 - **Multi-Level Filters**: Filter by Department, Semester (Sem 1 to 8), and Fee Status (Paid, Partial, Due, Overdue).
-- **Multi-Option Sorting**: Sort by Newest First, Oldest First, Name (A–Z), Highest GPA, and Highest Due Fee.
+- **Multi-Option Sorting**: Sort by Newest First, Oldest First, Name (A–Z), Highest CGPA, and Highest Due Fee.
 - **Modal Sheets**:
-  - **Enroll Student Modal**: Comprehensive 2-column modal for identity, academic standing, and initial fee structure.
+  - **Enroll Student Modal**: Comprehensive 2-column modal for identity, 10.0 CGPA academic standing, and initial ₹ fee structure.
   - **Edit Student Modal**: In-place modal to update all academic and billing metrics.
-  - **Student Profile Inspector**: Full dual-view card for academic standing and fee ledger.
-  - **Record Payment Modal**: Quick sheet to post fee payments with immediate receipt confirmation.
+  - **Student Profile Inspector**: Full dual-view card for academic standing (10.0 scale) and ₹ INR fee ledger.
+  - **Record Payment Modal**: Quick sheet to post fee payments in ₹ with immediate receipt confirmation.
   - **Delete Confirmation Modal**: Custom destructive warning sheet with confirmation.
 - **Multi-Select & Bulk Deletion**: Batch student row selection with confirmation-gated atomic deletion.
 
@@ -191,11 +195,11 @@ Hibernate automatically synchronizes the MySQL database schema using `spring.jpa
 | `email` | `VARCHAR(255)` | NOT NULL, UNIQUE | Campus or personal email |
 | `course` | `VARCHAR(255)` | NOT NULL | Department / Academic program |
 | `semester` | `VARCHAR(255)` | NULL | Current academic semester (`Semester 1`–`8`) |
-| `gpa` | `DOUBLE` | NULL | Cumulative Grade Point Average (0.00 – 4.00) |
+| `gpa` | `DOUBLE` | NULL | Cumulative Grade Point Average on 10.0 scale (0.00 – 10.00) |
 | `attendance` | `INTEGER` | NULL | Attendance percentage (0 – 100) |
-| `academic_status` | `VARCHAR(255)` | NULL | Standing (`Dean's List`, `Good Standing`, `Probation`) |
-| `total_fee` | `DOUBLE` | NULL | Total tuition fee invoiced |
-| `paid_fee` | `DOUBLE` | NULL | Total fee payments received |
+| `academic_status` | `VARCHAR(255)` | NULL | Standing (`Distinction`, `First Class`, `Second Class`, `Academic Warning`) |
+| `total_fee` | `DOUBLE` | NULL | Total tuition fee invoiced in Indian Rupees (₹) |
+| `paid_fee` | `DOUBLE` | NULL | Total fee payments received in Indian Rupees (₹) |
 | `fee_status` | `VARCHAR(255)` | NULL | Status (`PAID`, `PARTIAL`, `DUE`, `OVERDUE`) |
 | `fee_due_date` | `DATE` | NULL | Tuition payment deadline |
 | `registration_date` | `DATE` | NULL | Initial enrollment date |
